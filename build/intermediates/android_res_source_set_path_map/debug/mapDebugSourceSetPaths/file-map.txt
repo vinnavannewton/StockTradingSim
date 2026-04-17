@@ -1,0 +1,10 @@
+com.stock.stockflow-pngs-0 /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/build/generated/res/pngs/debug
+com.stock.stockflow-resValues-1 /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/build/generated/res/resValues/debug
+com.stock.stockflow-updated_navigation_xml-2 /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/build/generated/updated_navigation_xml/debug
+com.stock.stockflow-packageDebugResources-3 /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/build/intermediates/incremental/debug/packageDebugResources/merged.dir
+com.stock.stockflow-packageDebugResources-4 /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/build/intermediates/incremental/debug/packageDebugResources/stripped.dir
+com.stock.stockflow-debug-5 /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/build/intermediates/merged_res/debug/mergeDebugResources
+com.stock.stockflow-androidDebug-6 /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidDebug/res
+com.stock.stockflow-androidMain-7 /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/res
+com.stock.stockflow-debug-8 /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/debug/res
+com.stock.stockflow-main-9 /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/main/res

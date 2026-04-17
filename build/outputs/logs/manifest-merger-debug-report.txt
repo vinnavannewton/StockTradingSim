@@ -1,0 +1,300 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:1:1-17:12
+INJECTED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:1:1-17:12
+INJECTED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:1:1-17:12
+INJECTED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:1:1-17:12
+MERGED from [androidx.activity:activity:1.9.3] /home/vinnavan/.gradle/caches/9.3.1/transforms/9ffa8755e0945426476f7898a853bda2/transformed/activity-1.9.3/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.compose.foundation:foundation-layout-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/c6b86e53dac919233deb3da68ee05fba/transformed/foundation-layout-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.animation:animation-core-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/ab4b5019785958cae193ec307dd01e40/transformed/animation-core-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.material:material-ripple-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/343cd06ab6dcd8b3ed420351500ceb2b/transformed/material-ripple-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.animation:animation-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/3a5da77504a1f48be9f95f864c192b69/transformed/animation-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-tooling-preview-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/22c285a6c6c229f82fd704813907a692/transformed/ui-tooling-preview-release/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.compose.ui:ui-tooling-data-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/adf7d9f5c8541f4471c34292e314c611/transformed/ui-tooling-data-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-unit-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/e9b66c86e05b5ef0da0e9fcfdaf3d3aa/transformed/ui-unit-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-graphics-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/954fea186b423349ce5936a1a12b15cf/transformed/ui-graphics-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-geometry-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/0513ac322f5bfa7f7511597ca58726f6/transformed/ui-geometry-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-util-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/1ce5b7e85bc421780a61faf9e709430a/transformed/ui-util-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-text-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/97f008560c0c1d3e26314a4801838f2f/transformed/ui-text-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-tooling-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/6025934936bd633f4cf41925a3f19e04/transformed/ui-tooling-release/AndroidManifest.xml:17:1-28:12
+MERGED from [androidx.compose.material:material-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/8d149127e0b9e6c66a45236ad8c708de/transformed/material-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.foundation:foundation-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/e898eabeca90528718cde46bf5b1b96a/transformed/foundation-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.material:material-icons-core-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/612449103ffe21eb74e3935e0459c3a8/transformed/material-icons-core-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.ui:ui-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/f623f5a5f22998e9e27bc9e4ef8f8ad9/transformed/ui-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.activity:activity-ktx:1.9.3] /home/vinnavan/.gradle/caches/9.3.1/transforms/565cad0f496f73ece8905a0cf25887e6/transformed/activity-ktx-1.9.3/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.activity:activity-compose:1.9.3] /home/vinnavan/.gradle/caches/9.3.1/transforms/e3982ecc0d6840be6c8baea7dc2f8289/transformed/activity-compose-1.9.3/AndroidManifest.xml:2:1-7:12
+MERGED from [org.jetbrains.compose.components:components-ui-tooling-preview-android:1.7.3] /home/vinnavan/.gradle/caches/9.3.1/transforms/941fed0dea4fae854a49c4d53e695d20/transformed/library-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/54262b36923b2c263892118dd50c4d13/transformed/savedstate-ktx-1.2.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.emoji2:emoji2:1.3.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/555945c28539e9a2d45d09c1a5d3ed87/transformed/emoji2-1.3.0/AndroidManifest.xml:17:1-35:12
+MERGED from [androidx.autofill:autofill:1.0.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/ccfbdf3f6b88e63544a0283cae2bb203/transformed/autofill-1.0.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/a22915bdea6d2db7812779ae269a9a34/transformed/customview-poolingcontainer-1.0.0/AndroidManifest.xml:17:1-23:12
+MERGED from [androidx.core:core-ktx:1.13.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/29a1e8d7bede9ad9b86bee6caa75572d/transformed/core-ktx-1.13.1/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.graphics:graphics-path:1.0.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/4c0e5a1f4b35b1c647a36105c2dc50cf/transformed/graphics-path-1.0.1/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.core:core:1.13.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/33c0597ed0fd9cfa7ade02ccf3b69bec/transformed/core-1.13.1/AndroidManifest.xml:17:1-30:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/406524dcb978b5814f02f9fd276882e7/transformed/lifecycle-livedata-core-2.8.5/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-runtime-ktx-android:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/829df3777a0f277d9336d92f84089c87/transformed/lifecycle-runtime-ktx-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/9b13e32d5b473009bfe7e0768004059c/transformed/lifecycle-viewmodel-ktx-2.8.5/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/9e169dc1ceaf3fe12b33d50255babeaf/transformed/lifecycle-process-2.8.5/AndroidManifest.xml:17:1-35:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-android:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/bbddbc1fef14c1c7d9e7f7086bb3dba1/transformed/lifecycle-viewmodel-release/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-runtime-android:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/7771bb1e7461879277638e53bf88a37c/transformed/lifecycle-runtime-release/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/29cb749998ead4acd79bfab6f973ca7b/transformed/lifecycle-viewmodel-savedstate-2.8.5/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.savedstate:savedstate:1.2.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/0a7e5c76a86fdab609c0066d68367898/transformed/savedstate-1.2.1/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-runtime-compose-android:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/594bdc7b98c3fb71c23e06e312756c59/transformed/lifecycle-runtime-compose-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.runtime:runtime-saveable-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/5632729f8ce3122b0659719b81d41b5f/transformed/runtime-saveable-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.compose.runtime:runtime-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/7997825ed60b988986f0bf32dca892e1/transformed/runtime-release/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.annotation:annotation-experimental:1.4.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/35ff17844a884c4c79c99c2751f84172/transformed/annotation-experimental-1.4.1/AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/3147b0d45f20e18f9ad3faefbf8108fc/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.arch.core:core-runtime:2.2.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/7abf7fa1ffc128aeb535fa2107f3eda4/transformed/core-runtime-2.2.0/AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:17:1-55:12
+MERGED from [androidx.startup:startup-runtime:1.1.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/fad97bd8b8dbd9433a5e8e513fb743df/transformed/startup-runtime-1.1.1/AndroidManifest.xml:17:1-33:12
+MERGED from [androidx.tracing:tracing:1.0.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/8323b5616d03e6e9f30ef0dadeb77b92/transformed/tracing-1.0.0/AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/ed88c18fd9c365485ae4f9ccf8ec82c3/transformed/interpolator-1.0.0/AndroidManifest.xml:17:1-22:12
+	package
+		INJECTED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml
+	android:versionName
+		INJECTED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml
+	android:versionCode
+		INJECTED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml
+	xmlns:android
+		ADDED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:1:11-69
+application
+ADDED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:2:5-16:19
+INJECTED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:2:5-16:19
+MERGED from [androidx.compose.ui:ui-tooling-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/6025934936bd633f4cf41925a3f19e04/transformed/ui-tooling-release/AndroidManifest.xml:22:5-26:19
+MERGED from [androidx.compose.ui:ui-tooling-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/6025934936bd633f4cf41925a3f19e04/transformed/ui-tooling-release/AndroidManifest.xml:22:5-26:19
+MERGED from [androidx.emoji2:emoji2:1.3.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/555945c28539e9a2d45d09c1a5d3ed87/transformed/emoji2-1.3.0/AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.emoji2:emoji2:1.3.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/555945c28539e9a2d45d09c1a5d3ed87/transformed/emoji2-1.3.0/AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.core:core:1.13.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/33c0597ed0fd9cfa7ade02ccf3b69bec/transformed/core-1.13.1/AndroidManifest.xml:28:5-89
+MERGED from [androidx.core:core:1.13.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/33c0597ed0fd9cfa7ade02ccf3b69bec/transformed/core-1.13.1/AndroidManifest.xml:28:5-89
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/9e169dc1ceaf3fe12b33d50255babeaf/transformed/lifecycle-process-2.8.5/AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/9e169dc1ceaf3fe12b33d50255babeaf/transformed/lifecycle-process-2.8.5/AndroidManifest.xml:23:5-33:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/3147b0d45f20e18f9ad3faefbf8108fc/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/3147b0d45f20e18f9ad3faefbf8108fc/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:23:5-53:19
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:23:5-53:19
+MERGED from [androidx.startup:startup-runtime:1.1.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/fad97bd8b8dbd9433a5e8e513fb743df/transformed/startup-runtime-1.1.1/AndroidManifest.xml:25:5-31:19
+MERGED from [androidx.startup:startup-runtime:1.1.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/fad97bd8b8dbd9433a5e8e513fb743df/transformed/startup-runtime-1.1.1/AndroidManifest.xml:25:5-31:19
+	android:extractNativeLibs
+		INJECTED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml
+	android:appComponentFactory
+		ADDED from [androidx.core:core:1.13.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/33c0597ed0fd9cfa7ade02ccf3b69bec/transformed/core-1.13.1/AndroidManifest.xml:28:18-86
+	android:label
+		ADDED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:3:9-34
+	android:hardwareAccelerated
+		ADDED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:5:9-43
+	android:allowBackup
+		ADDED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:4:9-35
+	android:theme
+		ADDED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:6:9-66
+activity#com.stock.android.MainActivity
+ADDED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:7:9-15:20
+	android:exported
+		ADDED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:9:13-36
+	android:configChanges
+		ADDED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:10:13-83
+	android:name
+		ADDED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:8:13-58
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:11:13-14:29
+action#android.intent.action.MAIN
+ADDED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:12:17-69
+	android:name
+		ADDED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:12:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:13:17-77
+	android:name
+		ADDED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml:13:27-74
+uses-sdk
+INJECTED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml
+INJECTED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml
+MERGED from [androidx.activity:activity:1.9.3] /home/vinnavan/.gradle/caches/9.3.1/transforms/9ffa8755e0945426476f7898a853bda2/transformed/activity-1.9.3/AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity:1.9.3] /home/vinnavan/.gradle/caches/9.3.1/transforms/9ffa8755e0945426476f7898a853bda2/transformed/activity-1.9.3/AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.foundation:foundation-layout-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/c6b86e53dac919233deb3da68ee05fba/transformed/foundation-layout-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-layout-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/c6b86e53dac919233deb3da68ee05fba/transformed/foundation-layout-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-core-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/ab4b5019785958cae193ec307dd01e40/transformed/animation-core-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-core-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/ab4b5019785958cae193ec307dd01e40/transformed/animation-core-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-ripple-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/343cd06ab6dcd8b3ed420351500ceb2b/transformed/material-ripple-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-ripple-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/343cd06ab6dcd8b3ed420351500ceb2b/transformed/material-ripple-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/3a5da77504a1f48be9f95f864c192b69/transformed/animation-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.animation:animation-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/3a5da77504a1f48be9f95f864c192b69/transformed/animation-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-tooling-preview-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/22c285a6c6c229f82fd704813907a692/transformed/ui-tooling-preview-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.ui:ui-tooling-preview-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/22c285a6c6c229f82fd704813907a692/transformed/ui-tooling-preview-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.ui:ui-tooling-data-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/adf7d9f5c8541f4471c34292e314c611/transformed/ui-tooling-data-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-tooling-data-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/adf7d9f5c8541f4471c34292e314c611/transformed/ui-tooling-data-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-unit-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/e9b66c86e05b5ef0da0e9fcfdaf3d3aa/transformed/ui-unit-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-unit-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/e9b66c86e05b5ef0da0e9fcfdaf3d3aa/transformed/ui-unit-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-graphics-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/954fea186b423349ce5936a1a12b15cf/transformed/ui-graphics-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-graphics-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/954fea186b423349ce5936a1a12b15cf/transformed/ui-graphics-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-geometry-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/0513ac322f5bfa7f7511597ca58726f6/transformed/ui-geometry-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-geometry-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/0513ac322f5bfa7f7511597ca58726f6/transformed/ui-geometry-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-util-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/1ce5b7e85bc421780a61faf9e709430a/transformed/ui-util-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-util-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/1ce5b7e85bc421780a61faf9e709430a/transformed/ui-util-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-text-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/97f008560c0c1d3e26314a4801838f2f/transformed/ui-text-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-text-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/97f008560c0c1d3e26314a4801838f2f/transformed/ui-text-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-tooling-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/6025934936bd633f4cf41925a3f19e04/transformed/ui-tooling-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.ui:ui-tooling-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/6025934936bd633f4cf41925a3f19e04/transformed/ui-tooling-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.compose.material:material-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/8d149127e0b9e6c66a45236ad8c708de/transformed/material-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/8d149127e0b9e6c66a45236ad8c708de/transformed/material-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/e898eabeca90528718cde46bf5b1b96a/transformed/foundation-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.foundation:foundation-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/e898eabeca90528718cde46bf5b1b96a/transformed/foundation-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-icons-core-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/612449103ffe21eb74e3935e0459c3a8/transformed/material-icons-core-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.material:material-icons-core-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/612449103ffe21eb74e3935e0459c3a8/transformed/material-icons-core-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/f623f5a5f22998e9e27bc9e4ef8f8ad9/transformed/ui-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.ui:ui-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/f623f5a5f22998e9e27bc9e4ef8f8ad9/transformed/ui-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity-ktx:1.9.3] /home/vinnavan/.gradle/caches/9.3.1/transforms/565cad0f496f73ece8905a0cf25887e6/transformed/activity-ktx-1.9.3/AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity-ktx:1.9.3] /home/vinnavan/.gradle/caches/9.3.1/transforms/565cad0f496f73ece8905a0cf25887e6/transformed/activity-ktx-1.9.3/AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity-compose:1.9.3] /home/vinnavan/.gradle/caches/9.3.1/transforms/e3982ecc0d6840be6c8baea7dc2f8289/transformed/activity-compose-1.9.3/AndroidManifest.xml:5:5-44
+MERGED from [androidx.activity:activity-compose:1.9.3] /home/vinnavan/.gradle/caches/9.3.1/transforms/e3982ecc0d6840be6c8baea7dc2f8289/transformed/activity-compose-1.9.3/AndroidManifest.xml:5:5-44
+MERGED from [org.jetbrains.compose.components:components-ui-tooling-preview-android:1.7.3] /home/vinnavan/.gradle/caches/9.3.1/transforms/941fed0dea4fae854a49c4d53e695d20/transformed/library-release/AndroidManifest.xml:5:5-44
+MERGED from [org.jetbrains.compose.components:components-ui-tooling-preview-android:1.7.3] /home/vinnavan/.gradle/caches/9.3.1/transforms/941fed0dea4fae854a49c4d53e695d20/transformed/library-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/54262b36923b2c263892118dd50c4d13/transformed/savedstate-ktx-1.2.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate-ktx:1.2.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/54262b36923b2c263892118dd50c4d13/transformed/savedstate-ktx-1.2.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.emoji2:emoji2:1.3.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/555945c28539e9a2d45d09c1a5d3ed87/transformed/emoji2-1.3.0/AndroidManifest.xml:21:5-44
+MERGED from [androidx.emoji2:emoji2:1.3.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/555945c28539e9a2d45d09c1a5d3ed87/transformed/emoji2-1.3.0/AndroidManifest.xml:21:5-44
+MERGED from [androidx.autofill:autofill:1.0.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/ccfbdf3f6b88e63544a0283cae2bb203/transformed/autofill-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.autofill:autofill:1.0.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/ccfbdf3f6b88e63544a0283cae2bb203/transformed/autofill-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/a22915bdea6d2db7812779ae269a9a34/transformed/customview-poolingcontainer-1.0.0/AndroidManifest.xml:20:5-21:38
+MERGED from [androidx.customview:customview-poolingcontainer:1.0.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/a22915bdea6d2db7812779ae269a9a34/transformed/customview-poolingcontainer-1.0.0/AndroidManifest.xml:20:5-21:38
+MERGED from [androidx.core:core-ktx:1.13.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/29a1e8d7bede9ad9b86bee6caa75572d/transformed/core-ktx-1.13.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.core:core-ktx:1.13.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/29a1e8d7bede9ad9b86bee6caa75572d/transformed/core-ktx-1.13.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.graphics:graphics-path:1.0.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/4c0e5a1f4b35b1c647a36105c2dc50cf/transformed/graphics-path-1.0.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.graphics:graphics-path:1.0.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/4c0e5a1f4b35b1c647a36105c2dc50cf/transformed/graphics-path-1.0.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.core:core:1.13.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/33c0597ed0fd9cfa7ade02ccf3b69bec/transformed/core-1.13.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.13.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/33c0597ed0fd9cfa7ade02ccf3b69bec/transformed/core-1.13.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/406524dcb978b5814f02f9fd276882e7/transformed/lifecycle-livedata-core-2.8.5/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/406524dcb978b5814f02f9fd276882e7/transformed/lifecycle-livedata-core-2.8.5/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-ktx-android:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/829df3777a0f277d9336d92f84089c87/transformed/lifecycle-runtime-ktx-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-ktx-android:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/829df3777a0f277d9336d92f84089c87/transformed/lifecycle-runtime-ktx-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/9b13e32d5b473009bfe7e0768004059c/transformed/lifecycle-viewmodel-ktx-2.8.5/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/9b13e32d5b473009bfe7e0768004059c/transformed/lifecycle-viewmodel-ktx-2.8.5/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/9e169dc1ceaf3fe12b33d50255babeaf/transformed/lifecycle-process-2.8.5/AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/9e169dc1ceaf3fe12b33d50255babeaf/transformed/lifecycle-process-2.8.5/AndroidManifest.xml:21:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-android:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/bbddbc1fef14c1c7d9e7f7086bb3dba1/transformed/lifecycle-viewmodel-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-android:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/bbddbc1fef14c1c7d9e7f7086bb3dba1/transformed/lifecycle-viewmodel-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-android:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/7771bb1e7461879277638e53bf88a37c/transformed/lifecycle-runtime-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-android:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/7771bb1e7461879277638e53bf88a37c/transformed/lifecycle-runtime-release/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/29cb749998ead4acd79bfab6f973ca7b/transformed/lifecycle-viewmodel-savedstate-2.8.5/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel-savedstate:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/29cb749998ead4acd79bfab6f973ca7b/transformed/lifecycle-viewmodel-savedstate-2.8.5/AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate:1.2.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/0a7e5c76a86fdab609c0066d68367898/transformed/savedstate-1.2.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate:1.2.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/0a7e5c76a86fdab609c0066d68367898/transformed/savedstate-1.2.1/AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-compose-android:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/594bdc7b98c3fb71c23e06e312756c59/transformed/lifecycle-runtime-compose-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime-compose-android:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/594bdc7b98c3fb71c23e06e312756c59/transformed/lifecycle-runtime-compose-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.runtime:runtime-saveable-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/5632729f8ce3122b0659719b81d41b5f/transformed/runtime-saveable-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.runtime:runtime-saveable-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/5632729f8ce3122b0659719b81d41b5f/transformed/runtime-saveable-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.runtime:runtime-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/7997825ed60b988986f0bf32dca892e1/transformed/runtime-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.compose.runtime:runtime-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/7997825ed60b988986f0bf32dca892e1/transformed/runtime-release/AndroidManifest.xml:5:5-44
+MERGED from [androidx.annotation:annotation-experimental:1.4.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/35ff17844a884c4c79c99c2751f84172/transformed/annotation-experimental-1.4.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.annotation:annotation-experimental:1.4.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/35ff17844a884c4c79c99c2751f84172/transformed/annotation-experimental-1.4.1/AndroidManifest.xml:5:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/3147b0d45f20e18f9ad3faefbf8108fc/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/3147b0d45f20e18f9ad3faefbf8108fc/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.arch.core:core-runtime:2.2.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/7abf7fa1ffc128aeb535fa2107f3eda4/transformed/core-runtime-2.2.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.2.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/7abf7fa1ffc128aeb535fa2107f3eda4/transformed/core-runtime-2.2.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:21:5-44
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:21:5-44
+MERGED from [androidx.startup:startup-runtime:1.1.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/fad97bd8b8dbd9433a5e8e513fb743df/transformed/startup-runtime-1.1.1/AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.startup:startup-runtime:1.1.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/fad97bd8b8dbd9433a5e8e513fb743df/transformed/startup-runtime-1.1.1/AndroidManifest.xml:21:5-23:41
+MERGED from [androidx.tracing:tracing:1.0.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/8323b5616d03e6e9f30ef0dadeb77b92/transformed/tracing-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.tracing:tracing:1.0.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/8323b5616d03e6e9f30ef0dadeb77b92/transformed/tracing-1.0.0/AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.interpolator:interpolator:1.0.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/ed88c18fd9c365485ae4f9ccf8ec82c3/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/ed88c18fd9c365485ae4f9ccf8ec82c3/transformed/interpolator-1.0.0/AndroidManifest.xml:20:5-44
+	android:targetSdkVersion
+		INJECTED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/src/androidMain/AndroidManifest.xml
+activity#androidx.compose.ui.tooling.PreviewActivity
+ADDED from [androidx.compose.ui:ui-tooling-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/6025934936bd633f4cf41925a3f19e04/transformed/ui-tooling-release/AndroidManifest.xml:23:9-25:39
+	android:exported
+		ADDED from [androidx.compose.ui:ui-tooling-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/6025934936bd633f4cf41925a3f19e04/transformed/ui-tooling-release/AndroidManifest.xml:25:13-36
+	android:name
+		ADDED from [androidx.compose.ui:ui-tooling-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/6025934936bd633f4cf41925a3f19e04/transformed/ui-tooling-release/AndroidManifest.xml:24:13-71
+provider#androidx.startup.InitializationProvider
+ADDED from [androidx.emoji2:emoji2:1.3.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/555945c28539e9a2d45d09c1a5d3ed87/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/9e169dc1ceaf3fe12b33d50255babeaf/transformed/lifecycle-process-2.8.5/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.lifecycle:lifecycle-process:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/9e169dc1ceaf3fe12b33d50255babeaf/transformed/lifecycle-process-2.8.5/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:24:9-32:20
+MERGED from [androidx.startup:startup-runtime:1.1.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/fad97bd8b8dbd9433a5e8e513fb743df/transformed/startup-runtime-1.1.1/AndroidManifest.xml:26:9-30:34
+MERGED from [androidx.startup:startup-runtime:1.1.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/fad97bd8b8dbd9433a5e8e513fb743df/transformed/startup-runtime-1.1.1/AndroidManifest.xml:26:9-30:34
+	tools:node
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/555945c28539e9a2d45d09c1a5d3ed87/transformed/emoji2-1.3.0/AndroidManifest.xml:28:13-31
+	android:authorities
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/555945c28539e9a2d45d09c1a5d3ed87/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
+	android:exported
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/555945c28539e9a2d45d09c1a5d3ed87/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
+	android:name
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/555945c28539e9a2d45d09c1a5d3ed87/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
+meta-data#androidx.emoji2.text.EmojiCompatInitializer
+ADDED from [androidx.emoji2:emoji2:1.3.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/555945c28539e9a2d45d09c1a5d3ed87/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/555945c28539e9a2d45d09c1a5d3ed87/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.emoji2:emoji2:1.3.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/555945c28539e9a2d45d09c1a5d3ed87/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
+permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/33c0597ed0fd9cfa7ade02ccf3b69bec/transformed/core-1.13.1/AndroidManifest.xml:22:5-24:47
+	android:protectionLevel
+		ADDED from [androidx.core:core:1.13.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/33c0597ed0fd9cfa7ade02ccf3b69bec/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
+	android:name
+		ADDED from [androidx.core:core:1.13.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/33c0597ed0fd9cfa7ade02ccf3b69bec/transformed/core-1.13.1/AndroidManifest.xml:23:9-81
+permission#com.stock.stockflow.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/33c0597ed0fd9cfa7ade02ccf3b69bec/transformed/core-1.13.1/AndroidManifest.xml:22:5-24:47
+	android:protectionLevel
+		ADDED from [androidx.core:core:1.13.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/33c0597ed0fd9cfa7ade02ccf3b69bec/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
+	android:name
+		ADDED from [androidx.core:core:1.13.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/33c0597ed0fd9cfa7ade02ccf3b69bec/transformed/core-1.13.1/AndroidManifest.xml:23:9-81
+uses-permission#${applicationId}.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/33c0597ed0fd9cfa7ade02ccf3b69bec/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
+	android:name
+		ADDED from [androidx.core:core:1.13.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/33c0597ed0fd9cfa7ade02ccf3b69bec/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
+uses-permission#com.stock.stockflow.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+ADDED from [androidx.core:core:1.13.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/33c0597ed0fd9cfa7ade02ccf3b69bec/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
+	android:name
+		ADDED from [androidx.core:core:1.13.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/33c0597ed0fd9cfa7ade02ccf3b69bec/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
+meta-data#androidx.lifecycle.ProcessLifecycleInitializer
+ADDED from [androidx.lifecycle:lifecycle-process:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/9e169dc1ceaf3fe12b33d50255babeaf/transformed/lifecycle-process-2.8.5/AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.lifecycle:lifecycle-process:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/9e169dc1ceaf3fe12b33d50255babeaf/transformed/lifecycle-process-2.8.5/AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.lifecycle:lifecycle-process:2.8.5] /home/vinnavan/.gradle/caches/9.3.1/transforms/9e169dc1ceaf3fe12b33d50255babeaf/transformed/lifecycle-process-2.8.5/AndroidManifest.xml:30:17-78
+meta-data#androidx.profileinstaller.ProfileInstallerInitializer
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
+	android:value
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
+receiver#androidx.profileinstaller.ProfileInstallReceiver
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
+	android:enabled
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
+	android:exported
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
+	android:permission
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
+	android:directBootAware
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
+intent-filter#action:name:androidx.profileinstaller.action.INSTALL_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
+action#androidx.profileinstaller.action.INSTALL_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
+intent-filter#action:name:androidx.profileinstaller.action.SKIP_FILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
+action#androidx.profileinstaller.action.SKIP_FILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
+intent-filter#action:name:androidx.profileinstaller.action.SAVE_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
+action#androidx.profileinstaller.action.SAVE_PROFILE
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
+intent-filter#action:name:androidx.profileinstaller.action.BENCHMARK_OPERATION
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
+action#androidx.profileinstaller.action.BENCHMARK_OPERATION
+ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
+	android:name
+		ADDED from [androidx.profileinstaller:profileinstaller:1.3.1] /home/vinnavan/.gradle/caches/9.3.1/transforms/6575d5c3a61cc98842716dbe13c23fd2/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:25-92

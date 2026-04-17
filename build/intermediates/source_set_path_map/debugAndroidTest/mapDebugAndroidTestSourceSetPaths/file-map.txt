@@ -1,0 +1,5 @@
+com.stock.stockflow.test-androidTest-0 /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/build/generated/res/resValues/androidTest/debug
+com.stock.stockflow.test-updated_navigation_xml-1 /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/build/generated/updated_navigation_xml/debugAndroidTest
+com.stock.stockflow.test-mergeDebugAndroidTestResources-2 /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/merged.dir
+com.stock.stockflow.test-mergeDebugAndroidTestResources-3 /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/stripped.dir
+com.stock.stockflow.test-debugAndroidTest-4 /home/vinnavan/personal/code/AndroidKotlinCourse/StockFlowFixed/build/intermediates/merged_res/debugAndroidTest/mergeDebugAndroidTestResources
