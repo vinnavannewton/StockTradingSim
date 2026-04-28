@@ -72,6 +72,11 @@ import com.stock.storage.DataStore
 import com.stock.util.formatMoney
 import com.stock.util.formatSignedMoney
 import kotlinx.coroutines.flow.MutableStateFlow
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+import com.stock.api.SupabaseManager
+import androidx.compose.material.CircularProgressIndicator
 
 // ── Colours ────────────────────────────────────────────────────────────────
 private val Background = Color(0xFF07090F)
@@ -140,53 +145,85 @@ private fun fakeUiState(): UiState {
 @Composable
 fun StockFlowApp() {
     val isPreview = LocalInspectionMode.current
+    val scope     = rememberCoroutineScope()
 
-    val market = remember { if (isPreview) null else Market() }
-    var user   by remember { mutableStateOf(if (isPreview) User(1_000_000.0) else DataStore.load(1_000_000.0)) }
+    var isLoggedIn  by remember { mutableStateOf(if (isPreview) true else SupabaseManager.isLoggedIn()) }
+    var isLoading   by remember { mutableStateOf(!isPreview) }
+    val market      = remember { if (isPreview) null else Market() }
+    var user        by remember { mutableStateOf<User?>(if (isPreview) User(1_000_000.0) else null) }
 
-    val uiStateFlow = remember {
-        MutableStateFlow(
-            if (isPreview) fakeUiState()
-            else UiState.from(user, market!!)
-        )
+    val uiStateFlow = remember { MutableStateFlow(if (isPreview) fakeUiState() else UiState.empty()) }
+    val uiState     by uiStateFlow.collectAsState()
+
+    LaunchedEffect(isLoggedIn) {
+        if (!isPreview && isLoggedIn) {
+            user = DataStore.load(1_000_000.0)
+            uiStateFlow.value = UiState.from(user!!, market!!)
+            isLoading = false
+        }
     }
-    val uiState by uiStateFlow.collectAsState()
 
-    if (!isPreview) {
+    if (!isPreview && isLoggedIn) {
         DisposableEffect(Unit) {
             market!!.setOnUpdateCallback {
-                uiStateFlow.value = UiState.from(user, market)
+                user?.let { uiStateFlow.value = UiState.from(it, market) }
             }
             market.startSimulation()
             onDispose { market.stopSimulation() }
         }
     }
 
-    val sync: () -> Unit = {
-        if (!isPreview) {
-            DataStore.save(user)
-            uiStateFlow.value = UiState.from(user, market!!)
-        }
+    val sync: () -> Unit = sync@{
+        val u = user ?: return@sync
+        uiStateFlow.value = UiState.from(u, market!!)
+        scope.launch { DataStore.save(u) }
     }
 
     val reset: () -> Unit = {
         if (!isPreview) {
-            DataStore.reset()
-            user = User(1_000_000.0)
-            DataStore.save(user)
-            uiStateFlow.value = UiState.from(user, market!!)
+            val fresh = User(1_000_000.0)
+            user = fresh
+            uiStateFlow.value = UiState.from(fresh, market!!)
+            scope.launch { DataStore.reset() }
         }
+    }
+
+    val signOut: () -> Unit = {
+        scope.launch {
+            SupabaseManager.signOut()
+            isLoggedIn = false
+            isLoading = true
+            user = null
+            market?.stopSimulation()
+        }
+    }
+
+    if (!isLoggedIn) {
+        LoginScreen(onLoginSuccess = { isLoggedIn = true })
+        return
     }
 
     MaterialTheme {
         Surface(color = Background, modifier = Modifier.fillMaxSize()) {
+            if (isLoading) {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        CircularProgressIndicator(color = Accent)
+                        Spacer(Modifier.height(12.dp))
+                        Text("Loading your portfolio...", color = Text2, fontSize = 14.sp)
+                    }
+                }
+                return@Surface
+            }
+            val currentUser = user ?: return@Surface
             AppContent(
-                market        = market,
-                user          = user,
-                state         = uiState,
-                sync          = sync,
-                onReset       = reset,
-                isPreview     = isPreview,
+                market    = market,
+                user      = currentUser,
+                state     = uiState,
+                sync      = sync,
+                onReset   = reset,
+                onSignOut = signOut,
+                isPreview = isPreview,
             )
         }
     }
@@ -200,7 +237,8 @@ fun AppContent(
     state     : UiState,
     sync      : () -> Unit,
     onReset   : () -> Unit,
-    isPreview : Boolean = false,
+    onSignOut : () -> Unit,
+    isPreview : Boolean,
 ) {
     var selectedSymbol  by remember { mutableStateOf("AAPL") }
     var quantityText    by remember { mutableStateOf("1") }
@@ -238,6 +276,7 @@ fun AppContent(
                     state           = state,
                     sync            = sync,
                     onReset         = onReset,
+                    onSignOut       = onSignOut,
                     selectedSymbol  = selectedSymbol,
                     onSelectSymbol  = { selectedSymbol = it },
                     quantityText    = quantityText,
@@ -259,6 +298,7 @@ fun AppContent(
                     state           = state,
                     sync            = sync,
                     onReset         = onReset,
+                    onSignOut       = onSignOut,
                     selectedSymbol  = selectedSymbol,
                     onSelectSymbol  = { selectedSymbol = it },
                     quantityText    = quantityText,
@@ -286,6 +326,7 @@ private fun DesktopLayout(
     state            : UiState,
     sync             : () -> Unit,
     onReset          : () -> Unit,
+    onSignOut        : () -> Unit,
     selectedSymbol   : String,
     onSelectSymbol   : (String) -> Unit,
     quantityText     : String,
@@ -351,7 +392,7 @@ private fun DesktopLayout(
                     HistoryList(state.transactions)
                 }
                 Section.Settings -> {
-                    SettingsView(onReset)
+                    SettingsView(onReset = onReset, onSignOut = onSignOut)
                 }
             }
         }
@@ -405,6 +446,7 @@ private fun MobileLayout(
     state            : UiState,
     sync             : () -> Unit,
     onReset          : () -> Unit,
+    onSignOut        : () -> Unit,
     selectedSymbol   : String,
     onSelectSymbol   : (String) -> Unit,
     quantityText     : String,
@@ -474,7 +516,7 @@ private fun MobileLayout(
                     HistoryList(state.transactions)
                 }
                 Section.Settings -> {
-                    SettingsView(onReset)
+                    SettingsView(onReset = onReset, onSignOut = onSignOut)
                 }
             }
         }
@@ -917,19 +959,18 @@ private fun HistoryList(transactions: List<Transaction>) {
         }
     }
 }
-
 @Composable
-private fun SettingsView(onReset: () -> Unit) {
+private fun SettingsView(onReset: () -> Unit, onSignOut: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+           verticalArrangement = Arrangement.Center,
+           horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
             modifier = Modifier
-                .size(80.dp)
-                .clip(RoundedCornerShape(20.dp))
-                .background(Accent.copy(alpha = 0.1f)),
+            .size(80.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .background(Accent.copy(alpha = 0.1f)),
             contentAlignment = Alignment.Center
         ) {
             Icon(Icons.Default.TrendingUp, contentDescription = null, tint = Accent, modifier = Modifier.size(40.dp))
@@ -939,14 +980,14 @@ private fun SettingsView(onReset: () -> Unit) {
         Text("Next-Gen Trading Simulator", color = Text2, fontSize = 14.sp)
         Spacer(Modifier.height(48.dp))
         Button(
-            onClick = onReset,
+            onClick = onSignOut,
             colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-            elevation = ButtonDefaults.elevation(0.dp, 0.dp),
-            modifier = Modifier
-                .clip(RoundedCornerShape(12.dp))
-                .background(Bad.copy(alpha = 0.1f))
+               elevation = ButtonDefaults.elevation(0.dp, 0.dp),
+               modifier = Modifier
+               .clip(RoundedCornerShape(12.dp))
+               .background(Surface2)
         ) {
-            Text("Reset Account Data", color = Bad, fontWeight = FontWeight.Bold)
+            Text("Sign Out", color = Text2, fontWeight = FontWeight.Bold)
         }
     }
 }

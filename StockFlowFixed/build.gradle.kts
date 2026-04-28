@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     kotlin("multiplatform") version "2.1.0"
+    kotlin("plugin.serialization") version "2.1.0"
     id("com.android.application") version "9.1.1"
     id("org.jetbrains.compose") version "1.7.3"
     id("org.jetbrains.kotlin.plugin.compose") version "2.1.0"
@@ -13,12 +14,9 @@ version = "1.0.0"
 
 kotlin {
     androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
-        }
+        compilerOptions { jvmTarget.set(JvmTarget.JVM_17) }
     }
     jvm("desktop")
-
     jvmToolchain(17)
 
     sourceSets {
@@ -28,20 +26,28 @@ kotlin {
                 implementation(compose.foundation)
                 implementation(compose.material)
                 implementation(compose.ui)
-                implementation(compose.components.resources)
-                implementation(compose.components.uiToolingPreview)
                 implementation(compose.materialIconsExtended)
+                implementation("org.jetbrains.compose.components:components-ui-tooling-preview:1.7.3")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+                implementation("io.ktor:ktor-client-core:3.0.3")
+                implementation("io.ktor:ktor-client-content-negotiation:3.0.3")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.3")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+                implementation("io.github.jan-tennert.supabase:postgrest-kt:3.1.4")
+                implementation("io.github.jan-tennert.supabase:auth-kt:3.1.4")
+                implementation("io.github.jan-tennert.supabase:realtime-kt:3.1.4")
             }
         }
         val desktopMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
+                implementation("io.ktor:ktor-client-cio:3.0.3")
             }
         }
         val androidMain by getting {
             dependencies {
                 implementation("androidx.activity:activity-compose:1.9.3")
+                implementation("io.ktor:ktor-client-okhttp:3.0.3")
             }
         }
     }
@@ -50,7 +56,6 @@ kotlin {
 android {
     namespace = "com.stock.stockflow"
     compileSdk = 34
-
     defaultConfig {
         applicationId = "com.stock.stockflow"
         minSdk = 26
@@ -58,7 +63,6 @@ android {
         versionCode = 1
         versionName = "1.0.0"
     }
-
     sourceSets {
         getByName("main") {
             manifest.srcFile("src/androidMain/AndroidManifest.xml")
@@ -66,15 +70,11 @@ android {
             res.srcDirs("src/androidMain/res")
         }
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-
-    buildFeatures {
-        compose = true
-    }
+    buildFeatures { compose = true }
 }
 
 compose.desktop {
@@ -84,13 +84,6 @@ compose.desktop {
             targetFormats(TargetFormat.Deb, TargetFormat.Rpm, TargetFormat.Msi, TargetFormat.Exe)
             packageName = "StockFlow"
             packageVersion = "1.0.0"
-            
-            windows {
-                iconFile.set(project.file("src/desktopMain/resources/icon.png"))
-            }
-            linux {
-                iconFile.set(project.file("src/desktopMain/resources/icon.png"))
-            }
         }
     }
 }
