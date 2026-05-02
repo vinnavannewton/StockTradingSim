@@ -7,6 +7,7 @@ import io.github.jan.supabase.auth.Auth
 import io.github.jan.supabase.auth.SessionManager
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
+import io.github.jan.supabase.auth.providers.Google
 import io.github.jan.supabase.auth.user.UserSession
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
@@ -82,6 +83,10 @@ object SupabaseManager {
 
     suspend fun signIn(email: String, password: String): Result<Unit> = runCatching {
         client.auth.signInWith(Email) { this.email = email; this.password = password }
+    }
+
+    suspend fun signInWithGoogle(): Result<Unit> = runCatching {
+        client.auth.signInWith(Google)
     }
 
     suspend fun signOut() = runCatching {

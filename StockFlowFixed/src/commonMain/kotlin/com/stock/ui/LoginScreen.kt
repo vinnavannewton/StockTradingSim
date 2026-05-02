@@ -381,6 +381,65 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                             }
                         }
                     }
+
+                    // Divider
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(modifier = Modifier.weight(1f).height(1.dp).background(Border))
+                        Text(
+                            "OR",
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            color = Text2,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Box(modifier = Modifier.weight(1f).height(1.dp).background(Border))
+                    }
+
+                    // Google Login Button
+                    Button(
+                        onClick = {
+                            scope.launch {
+                                isLoading = true
+                                errorMsg = ""
+                                successMsg = ""
+                                focusManager.clearFocus()
+
+                                val result = SupabaseManager.signInWithGoogle()
+                                result.fold(
+                                    onSuccess = { onLoginSuccess() },
+                                    onFailure = { e ->
+                                        e.printStackTrace()
+                                        errorMsg = "Google Sign-In failed: ${e.message}"
+                                    }
+                                )
+                                isLoading = false
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(52.dp),
+                        enabled = !isLoading,
+                        shape = RoundedCornerShape(14.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Surf2,
+                            disabledBackgroundColor = Surf2.copy(alpha = 0.5f)
+                        ),
+                        elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp)
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+                            Text("G", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Black)
+                            Spacer(Modifier.width(12.dp))
+                            Text(
+                                "Continue with Google",
+                                color = Text1,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
                 }
 
                 Spacer(Modifier.height(20.dp))
