@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:1:1-18:12
-INJECTED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:1:1-18:12
-INJECTED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:1:1-18:12
-INJECTED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:1:1-18:12
+ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:1:1-25:12
+INJECTED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:1:1-25:12
+INJECTED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:1:1-25:12
+INJECTED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:1:1-25:12
 MERGED from [androidx.activity:activity:1.9.3] /home/vinnavan/.gradle/caches/9.3.1/transforms/aa79df595c25ed9a65ca30e1d9c30688/transformed/activity-1.9.3/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.compose.foundation:foundation-layout-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/cbf1727e15a5646bd554fee63aa5f087/transformed/foundation-layout-release/AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.animation:animation-core-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/13d4968f2e99d47992f4acaf3934232d/transformed/animation-core-release/AndroidManifest.xml:2:1-7:12
@@ -73,8 +73,8 @@ ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidMa
 	android:name
 		ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:2:22-64
 application
-ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:3:5-17:19
-INJECTED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:3:5-17:19
+ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:3:5-24:19
+INJECTED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:3:5-24:19
 MERGED from [androidx.compose.ui:ui-tooling-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/954663e5838d42605610173a24fa64e0/transformed/ui-tooling-release/AndroidManifest.xml:22:5-26:19
 MERGED from [androidx.compose.ui:ui-tooling-android:1.7.6] /home/vinnavan/.gradle/caches/9.3.1/transforms/954663e5838d42605610173a24fa64e0/transformed/ui-tooling-release/AndroidManifest.xml:22:5-26:19
 MERGED from [io.github.jan-tennert.supabase:auth-kt-android-debug:3.0.0] /home/vinnavan/.gradle/caches/9.3.1/transforms/acbea7a42baabaada05433c3af77cb2e/transformed/auth-kt-debug/AndroidManifest.xml:8:5-18:19
@@ -106,23 +106,45 @@ MERGED from [androidx.startup:startup-runtime:1.2.0] /home/vinnavan/.gradle/cach
 	android:theme
 		ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:7:9-66
 activity#com.stock.android.MainActivity
-ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:8:9-16:20
+ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:8:9-23:20
+	android:launchMode
+		ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:11:13-43
 	android:exported
 		ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:10:13-36
 	android:configChanges
-		ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:11:13-83
+		ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:12:13-83
 	android:name
 		ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:9:13-58
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:12:13-15:29
+ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:13:13-16:29
 action#android.intent.action.MAIN
-ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:13:17-69
+ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:14:17-69
 	android:name
-		ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:13:25-66
+		ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:14:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:14:17-77
+ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:15:17-77
 	android:name
-		ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:14:27-74
+		ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:15:27-74
+intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:host:login-callback+data:scheme:stockflow
+ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:17:13-22:29
+action#android.intent.action.VIEW
+ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:18:17-69
+	android:name
+		ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:18:25-66
+category#android.intent.category.DEFAULT
+ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:19:17-76
+	android:name
+		ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:19:27-73
+category#android.intent.category.BROWSABLE
+ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:20:17-78
+	android:name
+		ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:20:27-75
+data
+ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:21:17-82
+	android:host
+		ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:21:50-79
+	android:scheme
+		ADDED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml:21:23-49
 uses-sdk
 INJECTED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from /home/vinnavan/users/android/StockFlowFixed/src/androidMain/AndroidManifest.xml

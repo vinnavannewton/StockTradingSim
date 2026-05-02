@@ -1,10 +1,10 @@
 package com.stock.android
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.stock.auth.SessionStorage
 import com.stock.storage.DataStore
 import com.stock.ui.StockFlowApp
 
@@ -12,14 +12,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-
-        // Inject context before ANYTHING else so SessionStorage & DataStore work
-        val ctx = applicationContext
-        SessionStorage.context = ctx
-        DataStore.context      = ctx
-
+        DataStore.context = applicationContext
         setContent {
             StockFlowApp()
         }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
     }
 }

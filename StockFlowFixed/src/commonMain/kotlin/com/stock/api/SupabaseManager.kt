@@ -86,7 +86,7 @@ object SupabaseManager {
     }
 
     suspend fun signInWithGoogle(): Result<Unit> = runCatching {
-        client.auth.signInWith(Google)
+        client.auth.signInWith(Google, redirectUrl = "stockflow://login-callback")
     }
 
     suspend fun signOut() = runCatching {
