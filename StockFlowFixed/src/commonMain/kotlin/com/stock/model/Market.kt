@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 
 class Market {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    var focusedSymbol: String? = null
     private var updateJob: Job? = null
         private var onUpdateCallback: (() -> Unit)? = null
 
@@ -28,12 +29,12 @@ class Market {
                     if (s.sector !in _sectors) _sectors.add(s.sector)
                 }
 
-                add(Stock("AAPL",  "Apple Inc.",          "Technology", 189.50))
-                add(Stock("GOOG",  "Alphabet Inc.",        "Technology", 175.00))
-                add(Stock("MSFT",  "Microsoft Corp.",      "Technology", 378.00))
-                add(Stock("NVDA",  "NVIDIA Corp.",         "Technology", 875.00))
-                add(Stock("META",  "Meta Platforms",       "Technology", 485.00))
-                add(Stock("AMZN",  "Amazon.com",           "Technology", 185.00))
+                add(Stock("AAPL",  "Apple Inc.",          "Technology",  189.50))
+                add(Stock("GOOG",  "Alphabet Inc.",        "Technology",  175.00))
+                add(Stock("MSFT",  "Microsoft Corp.",      "Technology",  378.00))
+                add(Stock("NVDA",  "NVIDIA Corp.",         "Technology",  875.00))
+                add(Stock("META",  "Meta Platforms",       "Technology",  485.00))
+                add(Stock("AMZN",  "Amazon.com",           "Technology",  185.00))
                 add(Stock("TSLA",  "Tesla Inc.",           "Automotive",  245.00))
                 add(Stock("F",     "Ford Motor Co.",       "Automotive",   12.50))
                 add(Stock("RIVN",  "Rivian Automotive",    "Automotive",   12.00))
@@ -55,14 +56,23 @@ class Market {
             fun startSimulation() {
                 if (updateJob?.isActive == true) return
                     updateJob = scope.launch {
-                        // Immediate first fetch so UI shows real prices fast
                         fetchFromFinnhub()
                         onUpdateCallback?.invoke()
 
                         while (isActive) {
-                            delay(60_000) // poll every 60 s — stays within free tier
-                            fetchFromFinnhub()
-                            onUpdateCallback?.invoke()
+                            val focused = focusedSymbol
+                            if (focused != null) {
+                                delay(1_500)
+                                val price = FinnhubClient.fetchPrice(focused)
+                                if (price != null && price > 0.0) {
+                                    stockMap[focused]?.updatePrice(price)
+                                    onUpdateCallback?.invoke()
+                                }
+                            } else {
+                                delay(60_000)
+                                fetchFromFinnhub()
+                                onUpdateCallback?.invoke()
+                            }
                         }
                     }
             }
@@ -74,10 +84,11 @@ class Market {
 
             private suspend fun fetchFromFinnhub() {
                 FinnhubClient.fetchAll(_stocks.map { it.symbol }) { sym, price ->
-                    stockMap[sym]?.updatePriceFrom(price)
+                    stockMap[sym]?.updatePrice(price)
                 }
-                // Fallback: any stock still at 0 gets a tiny random nudge
-                _stocks.filter { it.price <= 0.0 }.forEach { it.updatePrice() }
+                _stocks.filter { it.price <= 0.0 }.forEach {
+                    it.updatePrice(it.price.coerceAtLeast(1.0))
+                }
             }
 
             fun getStock(symbol: String): Stock? = stockMap[symbol.uppercase()]

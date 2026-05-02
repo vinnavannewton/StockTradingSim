@@ -46,6 +46,8 @@ private const val BASE    = "https://finnhub.io/api/v1"
             }
         }
 
+        suspend fun fetchPrice(symbol: String): Double? = getPrice(symbol).takeIf { it > 0.0 }
+
         suspend fun fetchAll(symbols: List<String>, onEach: (String, Double) -> Unit) {
             symbols.forEach { sym ->
                 val price = getPrice(sym)

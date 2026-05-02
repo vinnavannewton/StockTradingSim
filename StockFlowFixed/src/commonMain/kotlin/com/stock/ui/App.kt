@@ -1,8 +1,16 @@
 package com.stock.ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -10,6 +18,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,15 +32,19 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBalanceWallet
@@ -45,24 +58,29 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.BlurEffect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.stock.api.SupabaseManager
 import com.stock.model.Market
 import com.stock.model.Stock
 import com.stock.model.Transaction
@@ -72,17 +90,8 @@ import com.stock.storage.DataStore
 import com.stock.util.formatMoney
 import com.stock.util.formatSignedMoney
 import kotlinx.coroutines.flow.MutableStateFlow
-import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
-import androidx.compose.runtime.LaunchedEffect
-import kotlinx.coroutines.launch
-import com.stock.api.SupabaseManager
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.OutlinedButton
-import androidx.compose.material.TextButton
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.BorderStroke
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 // ── Colours ────────────────────────────────────────────────────────────────
 private val Background = Color(0xFF07090F)
@@ -97,11 +106,11 @@ private val Border     = Color(0xFF334155)
 
 private val sectorsColor = mapOf(
     "Technology" to Color(0xFF38BDF8),
-    "Automotive" to Color(0xFFFB923C),
-    "Finance"    to Color(0xFF4ADE80),
-    "Healthcare" to Color(0xFFF472B6),
-    "Consumer"   to Color(0xFFA78BFA),
-    "Fintech"    to Color(0xFF22D3EE),
+                                 "Automotive" to Color(0xFFFB923C),
+                                 "Finance"    to Color(0xFF4ADE80),
+                                 "Healthcare" to Color(0xFFF472B6),
+                                 "Consumer"   to Color(0xFFA78BFA),
+                                 "Fintech"    to Color(0xFF22D3EE),
 )
 
 private enum class Section(val icon: ImageVector) {
@@ -123,10 +132,10 @@ private fun formatTime(epochMillis: Long): String {
 // ── Preview-safe fake data ──────────────────────────────────────────────────
 private fun fakeStocks() = listOf(
     Stock("AAPL", "Apple Inc.",      "Technology", 182.50),
-    Stock("TSLA", "Tesla Motors",    "Automotive",  245.30),
-    Stock("GOOG", "Alphabet Inc.",   "Technology", 142.10),
-    Stock("JPM",  "JP Morgan",       "Finance",     198.75),
-    Stock("AMZN", "Amazon.com",      "Consumer",    178.90),
+                                  Stock("TSLA", "Tesla Motors",    "Automotive",  245.30),
+                                  Stock("GOOG", "Alphabet Inc.",   "Technology", 142.10),
+                                  Stock("JPM",  "JP Morgan",       "Finance",     198.75),
+                                  Stock("AMZN", "Amazon.com",      "Consumer",    178.90),
 )
 
 private fun fakeUiState(): UiState {
@@ -137,13 +146,13 @@ private fun fakeUiState(): UiState {
         totalPnL     = 50_000.0,
         prices       = stocks.associate { it.symbol to it.price },
         watchlist    = listOf("AAPL", "TSLA"),
-        portfolio    = mapOf("AAPL" to 10, "GOOG" to 5),
-        avgPrices    = mapOf("AAPL" to 170.0, "GOOG" to 130.0),
-        transactions = listOf(
-            Transaction(Transaction.Type.BUY, "AAPL", 10, 170.0, System.currentTimeMillis() - 60_000),
-            Transaction(Transaction.Type.BUY, "GOOG",  5, 130.0, System.currentTimeMillis() - 30_000),
-            Transaction(Transaction.Type.SELL, "TSLA",  3, 240.0, System.currentTimeMillis() - 10_000),
-        ),
+                   portfolio    = mapOf("AAPL" to 10, "GOOG" to 5),
+                   avgPrices    = mapOf("AAPL" to 170.0, "GOOG" to 130.0),
+                   transactions = listOf(
+                       Transaction(Transaction.Type.BUY,  "AAPL", 10, 170.0, System.currentTimeMillis() - 60_000),
+                                         Transaction(Transaction.Type.BUY,  "GOOG",  5, 130.0, System.currentTimeMillis() - 30_000),
+                                         Transaction(Transaction.Type.SELL, "TSLA",  3, 240.0, System.currentTimeMillis() - 10_000),
+                   ),
     )
 }
 
@@ -154,9 +163,6 @@ private enum class AuthState { CHECKING, LOGGED_OUT, LOGGED_IN }
 @Composable
 fun StockFlowApp() {
     val isPreview = LocalInspectionMode.current
-
-
-    // Start as CHECKING so we wait for session restore before showing login
     var authState   by remember { mutableStateOf(if (isPreview) AuthState.LOGGED_IN else AuthState.CHECKING) }
     var isLoading   by remember { mutableStateOf(false) }
     val market      = remember { if (isPreview) null else Market() }
@@ -166,7 +172,6 @@ fun StockFlowApp() {
     val uiState     by uiStateFlow.collectAsState()
     val scope = rememberCoroutineScope()
 
-    // On first launch: restore persisted session before rendering login/main screen
     LaunchedEffect(Unit) {
         if (!isPreview) {
             val hasSession = SupabaseManager.restoreSession()
@@ -174,7 +179,6 @@ fun StockFlowApp() {
         }
     }
 
-    // Whenever we become logged in, load user data
     LaunchedEffect(authState) {
         if (!isPreview && authState == AuthState.LOGGED_IN) {
             isLoading = true
@@ -237,10 +241,8 @@ fun StockFlowApp() {
         }
     }
 
-    // ── Show appropriate screen based on auth state ────────────────────────
     when (authState) {
         AuthState.CHECKING -> {
-            // Splash / session restore in progress
             MaterialTheme {
                 Surface(color = Background, modifier = Modifier.fillMaxSize()) {
                     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -294,115 +296,161 @@ fun AppContent(
     user      : User,
     state     : UiState,
     sync      : () -> Unit,
-    onReset   : () -> Unit,
-    onSignOut : () -> Unit,
-    isPreview : Boolean,
+               onReset   : () -> Unit,
+               onSignOut : () -> Unit,
+               isPreview : Boolean,
 ) {
-    var selectedSymbol  by remember { mutableStateOf("AAPL") }
-    var quantityText    by remember { mutableStateOf("1") }
-    var message         by remember { mutableStateOf("") }
-    var messageIsError  by remember { mutableStateOf(false) }
-    var currentSection  by remember { mutableStateOf(Section.Market) }
-    var sectorFilter    by remember { mutableStateOf("All") }
+    var selectedSymbol by remember { mutableStateOf("AAPL") }
+    var quantityText   by remember { mutableStateOf("1") }
+    var message        by remember { mutableStateOf("") }
+    var messageIsError by remember { mutableStateOf(false) }
+    var currentSection by remember { mutableStateOf(Section.Market) }
+    var sectorFilter   by remember { mutableStateOf("All") }
+    var detailSymbol   by remember { mutableStateOf<String?>(null) }
 
     val stockList = if (isPreview) fakeStocks() else market!!.stocks
-    val sectors   = if (isPreview) listOf("Technology","Automotive","Finance","Healthcare","Consumer","Fintech")
-    else market!!.sectors
+    val sectors = if (isPreview) {
+        listOf("Technology", "Automotive", "Finance", "Healthcare", "Consumer", "Fintech")
+    } else {
+        market!!.sectors
+    }
+
+    if (detailSymbol != null) {
+        StockDetailScreen(
+            symbol           = detailSymbol!!,
+            market           = market,
+            user             = user,
+            state            = state,
+            quantityText     = quantityText,
+            onQuantityChange = { quantityText = it },
+            message          = message,
+            messageIsError   = messageIsError,
+            onMessage        = { t, e ->
+                message = t
+                messageIsError = e
+            },
+            sync             = sync,
+            onBack           = {
+                detailSymbol = null
+                market?.focusedSymbol = null
+            },
+            isPreview        = isPreview,
+        )
+        return
+    }
 
     BoxWithConstraints(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+        .fillMaxSize()
+        .padding(16.dp)
     ) {
         val compact = maxWidth < 840.dp
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .clip(RoundedCornerShape(24.dp))
-                .background(Surface1)
-                .padding(16.dp)
+            .fillMaxSize()
+            .clip(RoundedCornerShape(24.dp))
+            .background(Surface1)
+            .padding(16.dp)
         ) {
             HeaderBar(state.balance, state.netWorth, state.totalPnL)
             Spacer(Modifier.height(16.dp))
 
             if (compact) {
                 MobileLayout(
-                    stockList       = stockList,
-                    sectors         = sectors,
-                    user            = user,
-                    state           = state,
-                    sync            = sync,
-                    onReset         = onReset,
-                    onSignOut       = onSignOut,
-                    selectedSymbol  = selectedSymbol,
-                    onSelectSymbol  = { selectedSymbol = it },
-                    quantityText    = quantityText,
-                    onQuantityChange= { quantityText = it },
-                    message         = message,
-                    messageIsError  = messageIsError,
-                    onMessage       = { t, e -> message = t; messageIsError = e },
-                    currentSection  = currentSection,
-                    onSectionChange = { currentSection = it },
-                    sectorFilter    = sectorFilter,
+                    stockList            = stockList,
+                    sectors              = sectors,
+                    user                 = user,
+                    state                = state,
+                    sync                 = sync,
+                    onReset              = onReset,
+                    onSignOut            = onSignOut,
+                    selectedSymbol       = selectedSymbol,
+                    onSelectSymbol       = { sym ->
+                        selectedSymbol = sym
+                        detailSymbol = sym
+                        market?.focusedSymbol = sym
+                    },
+                    onDismissSymbol      = {
+                        market?.focusedSymbol = null
+                        detailSymbol = null
+                    },
+                    quantityText         = quantityText,
+                    onQuantityChange     = { quantityText = it },
+                    message              = message,
+                    messageIsError       = messageIsError,
+                    onMessage            = { t, e ->
+                        message = t
+                        messageIsError = e
+                    },
+                    currentSection       = currentSection,
+                    onSectionChange      = { currentSection = it },
+                    sectorFilter         = sectorFilter,
                     onSectorFilterChange = { sectorFilter = it },
-                    isPreview       = isPreview,
+                    isPreview            = isPreview,
                 )
             } else {
                 DesktopLayout(
-                    stockList       = stockList,
-                    sectors         = sectors,
-                    user            = user,
-                    state           = state,
-                    sync            = sync,
-                    onReset         = onReset,
-                    onSignOut       = onSignOut,
-                    selectedSymbol  = selectedSymbol,
-                    onSelectSymbol  = { selectedSymbol = it },
-                    quantityText    = quantityText,
-                    onQuantityChange= { quantityText = it },
-                    message         = message,
-                    messageIsError  = messageIsError,
-                    onMessage       = { t, e -> message = t; messageIsError = e },
-                    currentSection  = currentSection,
-                    onSectionChange = { currentSection = it },
-                    sectorFilter    = sectorFilter,
+                    stockList            = stockList,
+                    sectors              = sectors,
+                    user                 = user,
+                    state                = state,
+                    sync                 = sync,
+                    onReset              = onReset,
+                    onSignOut            = onSignOut,
+                    selectedSymbol       = selectedSymbol,
+                    onSelectSymbol       = { sym ->
+                        selectedSymbol = sym
+                        detailSymbol = sym
+                        market?.focusedSymbol = sym
+                    },
+                    quantityText         = quantityText,
+                    onQuantityChange     = { quantityText = it },
+                    message              = message,
+                    messageIsError       = messageIsError,
+                    onMessage            = { t, e ->
+                        message = t
+                        messageIsError = e
+                    },
+                    currentSection       = currentSection,
+                    onSectionChange      = { currentSection = it },
+                    sectorFilter         = sectorFilter,
                     onSectorFilterChange = { sectorFilter = it },
-                    isPreview       = isPreview,
+                    isPreview            = isPreview,
+                    focusedSymbol        = market?.focusedSymbol,
                 )
             }
         }
     }
 }
-
 // ── Desktop layout ───────────────────────────────────────────────────────────
 @Composable
 private fun DesktopLayout(
-    stockList        : List<Stock>,
-    sectors          : List<String>,
-    user             : User,
-    state            : UiState,
-    sync             : () -> Unit,
-    onReset          : () -> Unit,
-    onSignOut        : () -> Unit,
-    selectedSymbol   : String,
-    onSelectSymbol   : (String) -> Unit,
-    quantityText     : String,
-    onQuantityChange : (String) -> Unit,
-    message          : String,
-    messageIsError   : Boolean,
-    onMessage        : (String, Boolean) -> Unit,
-    currentSection   : Section,
-    onSectionChange  : (Section) -> Unit,
-    sectorFilter     : String,
-    onSectorFilterChange: (String) -> Unit,
-    isPreview        : Boolean,
+    stockList            : List<Stock>,
+    sectors              : List<String>,
+    user                 : User,
+    state                : UiState,
+    sync                 : () -> Unit,
+                          onReset              : () -> Unit,
+                          onSignOut            : () -> Unit,
+                          selectedSymbol       : String,
+                          onSelectSymbol       : (String) -> Unit,
+                          quantityText         : String,
+                          onQuantityChange     : (String) -> Unit,
+                          message              : String,
+                          messageIsError       : Boolean,
+                          onMessage            : (String, Boolean) -> Unit,
+                          currentSection       : Section,
+                          onSectionChange      : (Section) -> Unit,
+                          sectorFilter         : String,
+                          onSectorFilterChange : (String) -> Unit,
+                          isPreview            : Boolean,
+                          focusedSymbol        : String?,
 ) {
     Row(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.weight(1.5f).fillMaxSize()) {
             TopTabs(currentSection, onSectionChange)
             Spacer(Modifier.height(16.dp))
-
             when (currentSection) {
                 Section.Market -> {
                     SectorFilter(sectors, sectorFilter, onSectorFilterChange)
@@ -410,48 +458,36 @@ private fun DesktopLayout(
                     val filtered = if (sectorFilter == "All") stockList
                     else stockList.filter { it.sector == sectorFilter }
                     MarketList(
-                        stocks         = filtered,
-                        prices         = state.prices,
-                        selectedSymbol = selectedSymbol,
-                        watchlist      = state.watchlist,
-                        onSelect       = onSelectSymbol,
+                        stocks            = filtered,
+                        prices            = state.prices,
+                        selectedSymbol    = selectedSymbol,
+                        watchlist         = state.watchlist,
+                        focusedSymbol     = focusedSymbol,
+                        onSelect          = onSelectSymbol,
                         onWatchlistToggle = { sym ->
-                            if (!isPreview) {
-                                user.toggleWatchlist(sym)
-                                sync()
-                            }
+                            if (!isPreview) { user.toggleWatchlist(sym); sync() }
                         }
                     )
                 }
                 Section.Watchlist -> {
                     val filtered = stockList.filter { it.symbol in state.watchlist }
                     MarketList(
-                        stocks         = filtered,
-                        prices         = state.prices,
-                        selectedSymbol = selectedSymbol,
-                        watchlist      = state.watchlist,
-                        onSelect       = onSelectSymbol,
+                        stocks            = filtered,
+                        prices            = state.prices,
+                        selectedSymbol    = selectedSymbol,
+                        watchlist         = state.watchlist,
+                        focusedSymbol     = focusedSymbol,
+                        onSelect          = onSelectSymbol,
                         onWatchlistToggle = { sym ->
-                            if (!isPreview) {
-                                user.toggleWatchlist(sym)
-                                sync()
-                            }
+                            if (!isPreview) { user.toggleWatchlist(sym); sync() }
                         }
                     )
                 }
                 Section.Portfolio -> {
-                    PortfolioView(
-                        stockList = stockList,
-                        state = state,
-                        onSelect = onSelectSymbol
-                    )
+                    PortfolioView(stockList = stockList, state = state, onSelect = onSelectSymbol)
                 }
-                Section.History -> {
-                    HistoryList(state.transactions)
-                }
-                Section.Settings -> {
-                    SettingsView(onReset = onReset, onSignOut = onSignOut)
-                }
+                Section.History -> { HistoryList(state.transactions) }
+                Section.Settings -> { SettingsView(onReset = onReset, onSignOut = onSignOut) }
             }
         }
 
@@ -461,32 +497,25 @@ private fun DesktopLayout(
             val stock = stockList.find { it.symbol == selectedSymbol }
             if (stock != null) {
                 StockDetailCard(
-                    stock          = stock,
-                    currentPrice   = state.prices[stock.symbol] ?: stock.price,
-                    portfolioCount = state.portfolio[stock.symbol] ?: 0,
-                    avgPrice       = state.avgPrices[stock.symbol] ?: 0.0,
-                    quantityText   = quantityText,
+                    stock            = stock,
+                    currentPrice     = state.prices[stock.symbol] ?: stock.price,
+                    portfolioCount   = state.portfolio[stock.symbol] ?: 0,
+                    avgPrice         = state.avgPrices[stock.symbol] ?: 0.0,
+                    quantityText     = quantityText,
                     onQuantityChange = onQuantityChange,
-                    message        = message,
-                    messageIsError = messageIsError,
-                    onBuy          = { qty ->
+                    message          = message,
+                    messageIsError   = messageIsError,
+                    isFocused        = focusedSymbol == stock.symbol,
+                    onBuy            = { qty ->
                         if (!isPreview) {
-                            if (user.buyStock(stock, qty)) {
-                                onMessage("Bought $qty ${stock.symbol}", false)
-                                sync()
-                            } else {
-                                onMessage("Insufficient funds", true)
-                            }
+                            if (user.buyStock(stock, qty)) { onMessage("Bought $qty ${stock.symbol}", false); sync() }
+                            else onMessage("Insufficient funds", true)
                         }
                     },
-                    onSell         = { qty ->
+                    onSell           = { qty ->
                         if (!isPreview) {
-                            if (user.sellStock(stock, qty)) {
-                                onMessage("Sold $qty ${stock.symbol}", false)
-                                sync()
-                            } else {
-                                onMessage("Not enough shares", true)
-                            }
+                            if (user.sellStock(stock, qty)) { onMessage("Sold $qty ${stock.symbol}", false); sync() }
+                            else onMessage("Not enough shares", true)
                         }
                     }
                 )
@@ -498,25 +527,26 @@ private fun DesktopLayout(
 // ── Mobile layout ────────────────────────────────────────────────────────────
 @Composable
 private fun MobileLayout(
-    stockList        : List<Stock>,
-    sectors          : List<String>,
-    user             : User,
-    state            : UiState,
-    sync             : () -> Unit,
-    onReset          : () -> Unit,
-    onSignOut        : () -> Unit,
-    selectedSymbol   : String,
-    onSelectSymbol   : (String) -> Unit,
-    quantityText     : String,
-    onQuantityChange : (String) -> Unit,
-    message          : String,
-    messageIsError   : Boolean,
-    onMessage        : (String, Boolean) -> Unit,
-    currentSection   : Section,
-    onSectionChange  : (Section) -> Unit,
-    sectorFilter     : String,
-    onSectorFilterChange: (String) -> Unit,
-    isPreview        : Boolean,
+    stockList            : List<Stock>,
+    sectors              : List<String>,
+    user                 : User,
+    state                : UiState,
+    sync                 : () -> Unit,
+                         onReset              : () -> Unit,
+                         onSignOut            : () -> Unit,
+                         selectedSymbol       : String,
+                         onSelectSymbol       : (String) -> Unit,
+                         onDismissSymbol      : () -> Unit,
+                         quantityText         : String,
+                         onQuantityChange     : (String) -> Unit,
+                         message              : String,
+                         messageIsError       : Boolean,
+                         onMessage            : (String, Boolean) -> Unit,
+                         currentSection       : Section,
+                         onSectionChange      : (Section) -> Unit,
+                         sectorFilter         : String,
+                         onSectorFilterChange : (String) -> Unit,
+                         isPreview            : Boolean,
 ) {
     var showSheet by remember { mutableStateOf(false) }
 
@@ -533,73 +563,64 @@ private fun MobileLayout(
                         val filtered = if (sectorFilter == "All") stockList
                         else stockList.filter { it.sector == sectorFilter }
                         MarketList(
-                            stocks         = filtered,
-                            prices         = state.prices,
-                            selectedSymbol = selectedSymbol,
-                            watchlist      = state.watchlist,
-                            onSelect       = { onSelectSymbol(it); showSheet = true },
-                            onWatchlistToggle = { sym ->
-                                if (!isPreview) {
-                                    user.toggleWatchlist(sym)
-                                    sync()
-                                }
-                            }
+                            stocks            = filtered,
+                            prices            = state.prices,
+                            selectedSymbol    = selectedSymbol,
+                            watchlist         = state.watchlist,
+                            focusedSymbol     = null, // no blur on mobile
+                            onSelect          = { onSelectSymbol(it); showSheet = true },
+                                   onWatchlistToggle = { sym ->
+                                       if (!isPreview) { user.toggleWatchlist(sym); sync() }
+                                   }
                         )
                     }
                 }
                 Section.Watchlist -> {
                     val filtered = stockList.filter { it.symbol in state.watchlist }
                     MarketList(
-                        stocks         = filtered,
-                        prices         = state.prices,
-                        selectedSymbol = selectedSymbol,
-                        watchlist      = state.watchlist,
-                        onSelect       = { onSelectSymbol(it); showSheet = true },
-                        onWatchlistToggle = { sym ->
-                            if (!isPreview) {
-                                user.toggleWatchlist(sym)
-                                sync()
-                            }
-                        }
+                        stocks            = filtered,
+                        prices            = state.prices,
+                        selectedSymbol    = selectedSymbol,
+                        watchlist         = state.watchlist,
+                        focusedSymbol     = null,
+                        onSelect          = { onSelectSymbol(it); showSheet = true },
+                               onWatchlistToggle = { sym ->
+                                   if (!isPreview) { user.toggleWatchlist(sym); sync() }
+                               }
                     )
                 }
                 Section.Portfolio -> {
                     PortfolioView(
                         stockList = stockList,
-                        state = state,
-                        onSelect = { onSelectSymbol(it); showSheet = true }
+                        state     = state,
+                        onSelect  = { onSelectSymbol(it); showSheet = true }
                     )
                 }
-                Section.History -> {
-                    HistoryList(state.transactions)
-                }
-                Section.Settings -> {
-                    SettingsView(onReset = onReset, onSignOut = onSignOut)
-                }
+                Section.History  -> { HistoryList(state.transactions) }
+                Section.Settings -> { SettingsView(onReset = onReset, onSignOut = onSignOut) }
             }
         }
 
-        AnimatedVisibility(
-            visible = showSheet,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
+        AnimatedVisibility(visible = showSheet, enter = fadeIn(), exit = fadeOut()) {
             val stock = stockList.find { it.symbol == selectedSymbol }
             if (stock != null) {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.7f))
-                        .clickable { showSheet = false }
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.7f))
+                    .clickable {
+                        showSheet = false
+                        onDismissSymbol()
+                    }
                 ) {
                     Column(
                         modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
-                            .background(Surface2)
-                            .padding(24.dp)
-                            .clickable(enabled = false) {}
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
+                        .background(Surface2)
+                        .padding(24.dp)
+                        .clickable(enabled = false) {}
                     ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -609,39 +630,35 @@ private fun MobileLayout(
                             Text("Trade", color = Text1, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                             Icon(
                                 Icons.Default.Close,
-                                contentDescription = "Close",
-                                tint = Text2,
-                                modifier = Modifier.clickable { showSheet = false }
+                                 contentDescription = "Close",
+                                 tint = Text2,
+                                 modifier = Modifier.clickable {
+                                     showSheet = false
+                                     onDismissSymbol()
+                                 }
                             )
                         }
                         Spacer(Modifier.height(16.dp))
                         StockDetailCard(
-                            stock          = stock,
-                            currentPrice   = state.prices[stock.symbol] ?: stock.price,
-                            portfolioCount = state.portfolio[stock.symbol] ?: 0,
-                            avgPrice       = state.avgPrices[stock.symbol] ?: 0.0,
-                            quantityText   = quantityText,
+                            stock            = stock,
+                            currentPrice     = state.prices[stock.symbol] ?: stock.price,
+                            portfolioCount   = state.portfolio[stock.symbol] ?: 0,
+                            avgPrice         = state.avgPrices[stock.symbol] ?: 0.0,
+                            quantityText     = quantityText,
                             onQuantityChange = onQuantityChange,
-                            message        = message,
-                            messageIsError = messageIsError,
-                            onBuy          = { qty ->
+                            message          = message,
+                            messageIsError   = messageIsError,
+                            isFocused        = true, // always focused on mobile sheet
+                            onBuy            = { qty ->
                                 if (!isPreview) {
-                                    if (user.buyStock(stock, qty)) {
-                                        onMessage("Bought $qty ${stock.symbol}", false)
-                                        sync()
-                                    } else {
-                                        onMessage("Insufficient funds", true)
-                                    }
+                                    if (user.buyStock(stock, qty)) { onMessage("Bought $qty ${stock.symbol}", false); sync() }
+                                    else onMessage("Insufficient funds", true)
                                 }
                             },
-                            onSell         = { qty ->
+                            onSell           = { qty ->
                                 if (!isPreview) {
-                                    if (user.sellStock(stock, qty)) {
-                                        onMessage("Sold $qty ${stock.symbol}", false)
-                                        sync()
-                                    } else {
-                                        onMessage("Not enough shares", true)
-                                    }
+                                    if (user.sellStock(stock, qty)) { onMessage("Sold $qty ${stock.symbol}", false); sync() }
+                                    else onMessage("Not enough shares", true)
                                 }
                             }
                         )
@@ -657,10 +674,10 @@ private fun MobileLayout(
 private fun HeaderBar(balance: Double, netWorth: Double, pnl: Double) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
-            .background(Brush.horizontalGradient(listOf(Surface2, Surface2.copy(alpha = 0.7f))))
-            .padding(20.dp),
+        .fillMaxWidth()
+        .clip(RoundedCornerShape(20.dp))
+        .background(Brush.horizontalGradient(listOf(Surface2, Surface2.copy(alpha = 0.7f))))
+        .padding(20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -674,16 +691,16 @@ private fun HeaderBar(balance: Double, netWorth: Double, pnl: Double) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     if (pnl >= 0) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
-                    contentDescription = null,
-                    tint = if (pnl >= 0) Good else Bad,
-                    modifier = Modifier.size(12.dp)
+                        contentDescription = null,
+                     tint = if (pnl >= 0) Good else Bad,
+                     modifier = Modifier.size(12.dp)
                 )
                 Spacer(Modifier.width(4.dp))
                 Text(
                     text = formatSignedMoney(pnl),
-                    color = if (pnl >= 0) Good else Bad,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold
+                     color = if (pnl >= 0) Good else Bad,
+                     fontSize = 12.sp,
+                     fontWeight = FontWeight.Bold
                 )
             }
         }
@@ -703,20 +720,20 @@ private fun TopTabs(current: Section, onSelect: (Section) -> Unit) {
             val selected = current == section
             Tab(
                 selected = selected,
-                onClick = { onSelect(section) },
+                onClick  = { onSelect(section) },
                 text = {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(
                             section.icon,
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp),
-                            tint = if (selected) Accent else Text2
+                             contentDescription = null,
+                             modifier = Modifier.size(20.dp),
+                             tint = if (selected) Accent else Text2
                         )
                         Text(
                             section.name,
-                            fontSize = 10.sp,
-                            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-                            color = if (selected) Accent else Text2
+                             fontSize = 10.sp,
+                             fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                             color = if (selected) Accent else Text2
                         )
                     }
                 }
@@ -729,8 +746,8 @@ private fun TopTabs(current: Section, onSelect: (Section) -> Unit) {
 private fun SectorFilter(sectors: List<String>, selected: String, onSelect: (String) -> Unit) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .horizontalScroll(rememberScrollState()),
+        .fillMaxWidth()
+        .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         val list = listOf("All") + sectors
@@ -738,10 +755,10 @@ private fun SectorFilter(sectors: List<String>, selected: String, onSelect: (Str
             val isSel = s == selected
             Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(if (isSel) Accent else Surface2)
-                    .clickable { onSelect(s) }
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(if (isSel) Accent else Surface2)
+                .clickable { onSelect(s) }
+                .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 Text(s, color = if (isSel) Background else Text1, fontSize = 12.sp, fontWeight = FontWeight.Bold)
             }
@@ -755,67 +772,123 @@ private fun MarketList(
     prices            : Map<String, Double>,
     selectedSymbol    : String,
     watchlist         : List<String>,
+    focusedSymbol     : String?,
     onSelect          : (String) -> Unit,
-    onWatchlistToggle : (String) -> Unit,
+                       onWatchlistToggle : (String) -> Unit,
 ) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(10.dp)) {
         items(stocks) { stock ->
-            val price = prices[stock.symbol] ?: stock.price
+            val price      = prices[stock.symbol] ?: stock.price
             val isSelected = stock.symbol == selectedSymbol
             val inWatchlist = stock.symbol in watchlist
 
-            Row(
-                modifier = Modifier
+            // Focus blur/dim — only when something is focused and it's NOT this stock
+            val isFocused = focusedSymbol == null || focusedSymbol == stock.symbol
+            val alpha by animateFloatAsState(
+                targetValue = if (isFocused) 1f else 0.25f,
+                                             animationSpec = tween(300),
+                                             label = "alpha"
+            )
+            val scale by animateFloatAsState(
+                targetValue = if (isFocused) 1f else 0.97f,
+                                             animationSpec = tween(300),
+                                             label = "scale"
+            )
+
+            Box(
+                modifier = Modifier.graphicsLayer {
+                    this.alpha = alpha
+                    scaleX = scale
+                    scaleY = scale
+                    if (!isFocused) {
+                        renderEffect = BlurEffect(3f, 3f, TileMode.Decal)
+                    }
+                }
+            ) {
+                Row(
+                    modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(16.dp))
                     .background(if (isSelected) Surface2 else Surface2.copy(alpha = 0.3f))
                     .clickable { onSelect(stock.symbol) }
                     .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
                         .size(48.dp)
                         .clip(RoundedCornerShape(12.dp))
                         .background(sectorsColor[stock.sector]?.copy(alpha = 0.2f) ?: Border),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        stock.symbol.take(1),
-                        color = sectorsColor[stock.sector] ?: Text1,
-                        fontWeight = FontWeight.Black,
-                        fontSize = 18.sp
-                    )
-                }
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            stock.symbol.take(1),
+                             color = sectorsColor[stock.sector] ?: Text1,
+                             fontWeight = FontWeight.Black,
+                             fontSize = 18.sp
+                        )
+                    }
 
-                Spacer(Modifier.width(16.dp))
+                    Spacer(Modifier.width(16.dp))
 
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(stock.symbol, color = Text1, fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                    Text(stock.name, color = Text2, fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                }
+                    Column(modifier = Modifier.weight(1f)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(stock.symbol, color = Text1, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                            // LIVE badge — only on the focused stock
+                            if (focusedSymbol == stock.symbol) {
+                                Spacer(Modifier.width(8.dp))
+                                LiveBadge()
+                            }
+                        }
+                        Text(stock.name, color = Text2, fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    }
 
-                Column(horizontalAlignment = Alignment.End) {
-                    Text(formatMoney(price), color = Text1, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
-                    Icon(
-                        if (inWatchlist) Icons.Default.Star else Icons.Default.Star,
-                        contentDescription = "Watchlist",
-                        tint = if (inWatchlist) Color(0xFFFCD34D) else Text2.copy(alpha = 0.3f),
-                        modifier = Modifier
-                            .size(18.dp)
-                            .clickable { onWatchlistToggle(stock.symbol) }
-                    )
+                    Column(horizontalAlignment = Alignment.End) {
+                        Text(formatMoney(price), color = Text1, fontWeight = FontWeight.ExtraBold, fontSize = 16.sp)
+                        Icon(
+                            Icons.Default.Star,
+                             contentDescription = "Watchlist",
+                             tint = if (inWatchlist) Color(0xFFFCD34D) else Text2.copy(alpha = 0.3f),
+                             modifier = Modifier
+                             .size(18.dp)
+                             .clickable { onWatchlistToggle(stock.symbol) }
+                        )
+                    }
                 }
             }
         }
     }
 }
 
+// ── Pulsing LIVE badge ───────────────────────────────────────────────────────
+@Composable
+private fun LiveBadge() {
+    val pulse by rememberInfiniteTransition(label = "pulse").animateFloat(
+        initialValue = 0.8f,
+        targetValue  = 1.4f,
+        animationSpec = infiniteRepeatable(
+            tween(800, easing = FastOutSlowInEasing),
+                                           RepeatMode.Reverse
+        ),
+        label = "pulseScale"
+    )
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = Modifier
+            .size(6.dp)
+            .graphicsLayer { scaleX = pulse; scaleY = pulse }
+            .background(Good, CircleShape)
+        )
+        Spacer(Modifier.width(4.dp))
+        Text("LIVE", color = Good, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+    }
+}
+
 @Composable
 private fun PortfolioView(
-    stockList: List<Stock>,
-    state: UiState,
-    onSelect: (String) -> Unit
+    stockList : List<Stock>,
+    state     : UiState,
+    onSelect  : (String) -> Unit
 ) {
     val myStocks = stockList.filter { state.portfolio.containsKey(it.symbol) }
 
@@ -831,32 +904,31 @@ private fun PortfolioView(
     } else {
         LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             items(myStocks) { stock ->
-                val qty = state.portfolio[stock.symbol] ?: 0
-                val avg = state.avgPrices[stock.symbol] ?: 0.0
+                val qty  = state.portfolio[stock.symbol] ?: 0
+                val avg  = state.avgPrices[stock.symbol] ?: 0.0
                 val curr = state.prices[stock.symbol] ?: stock.price
-                val pnl = (curr - avg) * qty
+                val pnl  = (curr - avg) * qty
 
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(Surface2)
-                        .clickable { onSelect(stock.symbol) }
-                        .padding(16.dp),
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(Surface2)
+                    .clickable { onSelect(stock.symbol) }
+                    .padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(stock.symbol, color = Text1, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                         Text("$qty Shares", color = Text2, fontSize = 12.sp)
                     }
-
                     Column(horizontalAlignment = Alignment.End) {
                         Text(formatMoney(curr * qty), color = Text1, fontWeight = FontWeight.Bold)
                         Text(
                             formatSignedMoney(pnl),
-                            color = if (pnl >= 0) Good else Bad,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Medium
+                                color = if (pnl >= 0) Good else Bad,
+                             fontSize = 12.sp,
+                             fontWeight = FontWeight.Medium
                         )
                     }
                 }
@@ -866,29 +938,36 @@ private fun PortfolioView(
 }
 
 @Composable
-private fun StockDetailCard(
-    stock          : Stock,
-    currentPrice   : Double,
-    portfolioCount : Int,
-    avgPrice       : Double,
-    quantityText   : String,
+fun StockDetailCard(
+    stock            : Stock,
+    currentPrice     : Double,
+    portfolioCount   : Int,
+    avgPrice         : Double,
+    quantityText     : String,
     onQuantityChange : (String) -> Unit,
-    message        : String,
-    messageIsError : Boolean,
-    onBuy          : (Int) -> Unit,
-    onSell         : (Int) -> Unit,
+                            message          : String,
+                            messageIsError   : Boolean,
+                            isFocused        : Boolean,
+                            onBuy            : (Int) -> Unit,
+                            onSell           : (Int) -> Unit,
 ) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
-            .background(Surface2.copy(alpha = 0.5f))
-            .padding(20.dp)
+        .fillMaxWidth()
+        .clip(RoundedCornerShape(20.dp))
+        .background(Surface2.copy(alpha = 0.5f))
+        .padding(20.dp)
     ) {
-        Row(verticalAlignment = Alignment.Bottom) {
-            Text(stock.symbol, color = Accent, fontSize = 16.sp, fontWeight = FontWeight.Bold)
-            Spacer(Modifier.width(8.dp))
-            Text(stock.sector, color = sectorsColor[stock.sector] ?: Text2, fontSize = 12.sp)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(verticalAlignment = Alignment.Bottom, modifier = Modifier.weight(1f)) {
+                Text(stock.symbol, color = Accent, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                Spacer(Modifier.width(8.dp))
+                Text(stock.sector, color = sectorsColor[stock.sector] ?: Text2, fontSize = 12.sp)
+            }
+            // Show LIVE badge in the detail card header too when focused
+            if (isFocused) {
+                LiveBadge()
+            }
         }
         Text(stock.name, color = Text1, fontSize = 28.sp, fontWeight = FontWeight.Black)
 
@@ -912,19 +991,19 @@ private fun StockDetailCard(
         Spacer(Modifier.height(24.dp))
 
         OutlinedTextField(
-            value = quantityText,
-            onValueChange = { if (it.all { c -> c.isDigit() }) onQuantityChange(it) },
-            label = { Text("Quantity to trade", color = Text2) },
-            modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                textColor = Text1,
-                cursorColor = Accent,
-                focusedBorderColor = Accent,
-                unfocusedBorderColor = Border,
-                backgroundColor = Surface1.copy(alpha = 0.5f)
-            ),
-            shape = RoundedCornerShape(12.dp),
-            singleLine = true
+            value            = quantityText,
+            onValueChange    = { if (it.all { c -> c.isDigit() }) onQuantityChange(it) },
+                          label            = { Text("Quantity to trade", color = Text2) },
+                          modifier         = Modifier.fillMaxWidth(),
+                          colors           = TextFieldDefaults.outlinedTextFieldColors(
+                              textColor            = Text1,
+                              cursorColor          = Accent,
+                              focusedBorderColor   = Accent,
+                              unfocusedBorderColor = Border,
+                              backgroundColor      = Surface1.copy(alpha = 0.5f)
+                          ),
+                          shape      = RoundedCornerShape(12.dp),
+                          singleLine = true
         )
 
         Spacer(Modifier.height(20.dp))
@@ -932,22 +1011,22 @@ private fun StockDetailCard(
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             val qty = quantityText.toIntOrNull() ?: 0
             Button(
-                onClick = { onBuy(qty) },
-                modifier = Modifier.weight(1f).height(56.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Good),
-                shape = RoundedCornerShape(16.dp),
-                elevation = ButtonDefaults.elevation(defaultElevation = 0.dp),
-                enabled = qty > 0
+                onClick   = { onBuy(qty) },
+                   modifier  = Modifier.weight(1f).height(56.dp),
+                   colors    = ButtonDefaults.buttonColors(backgroundColor = Good),
+                   shape     = RoundedCornerShape(16.dp),
+                   elevation = ButtonDefaults.elevation(defaultElevation = 0.dp),
+                   enabled   = qty > 0
             ) {
                 Text("BUY", color = Color(0xFF064E3B), fontWeight = FontWeight.Black)
             }
             Button(
-                onClick = { onSell(qty) },
-                modifier = Modifier.weight(1f).height(56.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = Bad),
-                shape = RoundedCornerShape(16.dp),
-                elevation = ButtonDefaults.elevation(defaultElevation = 0.dp),
-                enabled = qty > 0 && portfolioCount >= qty
+                onClick   = { onSell(qty) },
+                   modifier  = Modifier.weight(1f).height(56.dp),
+                   colors    = ButtonDefaults.buttonColors(backgroundColor = Bad),
+                   shape     = RoundedCornerShape(16.dp),
+                   elevation = ButtonDefaults.elevation(defaultElevation = 0.dp),
+                   enabled   = qty > 0 && portfolioCount >= qty
             ) {
                 Text("SELL", color = Color(0xFF7F1D1D), fontWeight = FontWeight.Black)
             }
@@ -957,18 +1036,18 @@ private fun StockDetailCard(
             Spacer(Modifier.height(16.dp))
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(if (messageIsError) Bad.copy(alpha = 0.1f) else Good.copy(alpha = 0.1f))
-                    .padding(12.dp),
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .background(if (messageIsError) Bad.copy(alpha = 0.1f) else Good.copy(alpha = 0.1f))
+                .padding(12.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     message,
-                    color = if (messageIsError) Bad else Good,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
+                     color      = if (messageIsError) Bad else Good,
+                     fontSize   = 14.sp,
+                     fontWeight = FontWeight.Bold,
+                     textAlign  = TextAlign.Center
                 )
             }
         }
@@ -986,10 +1065,10 @@ private fun HistoryList(transactions: List<Transaction>) {
             items(transactions.reversed()) { tx ->
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(Surface2.copy(alpha = 0.5f))
-                        .padding(16.dp),
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(Surface2.copy(alpha = 0.5f))
+                    .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -997,9 +1076,9 @@ private fun HistoryList(transactions: List<Transaction>) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Box(
                                 modifier = Modifier
-                                    .size(10.dp)
-                                    .clip(CircleShape)
-                                    .background(if (tx.type == Transaction.Type.BUY) Good else Bad)
+                                .size(10.dp)
+                                .clip(CircleShape)
+                                .background(if (tx.type == Transaction.Type.BUY) Good else Bad)
                             )
                             Spacer(Modifier.width(10.dp))
                             Text(tx.symbol, color = Text1, fontWeight = FontWeight.Bold, fontSize = 16.sp)
@@ -1007,7 +1086,7 @@ private fun HistoryList(transactions: List<Transaction>) {
                         Text(formatTime(tx.timestamp), color = Text2, fontSize = 11.sp)
                     }
                     Column(horizontalAlignment = Alignment.End) {
-                        val sign = if (tx.type == Transaction.Type.BUY) "-" else "+"
+                        val sign  = if (tx.type == Transaction.Type.BUY) "-" else "+"
                         val total = tx.quantity * tx.pricePerShare
                         Text("$sign${formatMoney(total)}", color = Text1, fontWeight = FontWeight.Bold)
                         Text("${tx.quantity} @ ${formatMoney(tx.pricePerShare)}", color = Text2, fontSize = 11.sp)
@@ -1017,6 +1096,7 @@ private fun HistoryList(transactions: List<Transaction>) {
         }
     }
 }
+
 @Composable
 private fun SettingsView(onReset: () -> Unit, onSignOut: () -> Unit) {
     var showResetDialog by remember { mutableStateOf(false) }
@@ -1024,46 +1104,41 @@ private fun SettingsView(onReset: () -> Unit, onSignOut: () -> Unit) {
     if (showResetDialog) {
         AlertDialog(
             onDismissRequest = { showResetDialog = false },
-            backgroundColor = Surface2,
-            shape = RoundedCornerShape(20.dp),
-            title = {
-                Text("Reset Account?", color = Text1, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-            },
-            text = {
-                Text(
-                    "This will wipe your entire portfolio, watchlist, transaction history, and restore your balance to \$1,000,000. This cannot be undone.",
-                    color = Text2, fontSize = 14.sp
-                )
-            },
-            confirmButton = {
-                Button(
-                    onClick = { showResetDialog = false; onReset() },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Bad),
-                    shape = RoundedCornerShape(10.dp),
-                    elevation = ButtonDefaults.elevation(0.dp)
-                ) { Text("Reset", color = Color.White, fontWeight = FontWeight.Bold) }
-            },
-            dismissButton = {
-                TextButton(onClick = { showResetDialog = false }) {
-                    Text("Cancel", color = Text2)
-                }
-            }
+            backgroundColor  = Surface2,
+            shape            = RoundedCornerShape(20.dp),
+                    title  = { Text("Reset Account?", color = Text1, fontWeight = FontWeight.Bold, fontSize = 18.sp) },
+                    text   = {
+                        Text(
+                            "This will wipe your entire portfolio, watchlist, transaction history, and restore your balance to \$1,000,000. This cannot be undone.",
+                             color = Text2, fontSize = 14.sp
+                        )
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick   = { showResetDialog = false; onReset() },
+                               colors    = ButtonDefaults.buttonColors(backgroundColor = Bad),
+                               shape     = RoundedCornerShape(10.dp),
+                               elevation = ButtonDefaults.elevation(0.dp)
+                        ) { Text("Reset", color = Color.White, fontWeight = FontWeight.Bold) }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showResetDialog = false }) {
+                            Text("Cancel", color = Text2)
+                        }
+                    }
         )
     }
 
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+           verticalArrangement   = Arrangement.Center,
+           horizontalAlignment   = Alignment.CenterHorizontally
     ) {
-        // Logo
         Box(
             modifier = Modifier
-                .size(88.dp)
-                .clip(RoundedCornerShape(24.dp))
-                .background(
-                    Brush.linearGradient(listOf(Accent, Color(0xFF818CF8)))
-                ),
+            .size(88.dp)
+            .clip(RoundedCornerShape(24.dp))
+            .background(Brush.linearGradient(listOf(Accent, Color(0xFF818CF8)))),
             contentAlignment = Alignment.Center
         ) {
             Icon(Icons.Default.TrendingUp, contentDescription = null, tint = Color.White, modifier = Modifier.size(44.dp))
@@ -1074,31 +1149,26 @@ private fun SettingsView(onReset: () -> Unit, onSignOut: () -> Unit) {
         Spacer(Modifier.height(8.dp))
         Box(
             modifier = Modifier
-                .clip(RoundedCornerShape(8.dp))
-                .background(Accent.copy(alpha = 0.12f))
-                .padding(horizontal = 12.dp, vertical = 4.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(Accent.copy(alpha = 0.12f))
+            .padding(horizontal = 12.dp, vertical = 4.dp)
         ) {
             Text("v1.0.0 · Cloud Synced", color = Accent, fontSize = 12.sp, fontWeight = FontWeight.Medium)
         }
-
         Spacer(Modifier.height(48.dp))
 
-        // Sign Out button
         Button(
-            onClick = onSignOut,
-            modifier = Modifier.width(240.dp).height(50.dp),
-            shape = RoundedCornerShape(14.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-            elevation = ButtonDefaults.elevation(0.dp, 0.dp),
-            contentPadding = PaddingValues(0.dp)
+            onClick          = onSignOut,
+            modifier         = Modifier.width(240.dp).height(50.dp),
+               shape            = RoundedCornerShape(14.dp),
+               colors           = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
+               elevation        = ButtonDefaults.elevation(0.dp, 0.dp),
+               contentPadding   = PaddingValues(0.dp)
         ) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        Brush.horizontalGradient(listOf(Accent, Color(0xFF818CF8))),
-                        RoundedCornerShape(14.dp)
-                    ),
+                .fillMaxSize()
+                .background(Brush.horizontalGradient(listOf(Accent, Color(0xFF818CF8))), RoundedCornerShape(14.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Text("Sign Out", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
@@ -1107,13 +1177,12 @@ private fun SettingsView(onReset: () -> Unit, onSignOut: () -> Unit) {
 
         Spacer(Modifier.height(16.dp))
 
-        // Reset account (destructive)
         OutlinedButton(
-            onClick = { showResetDialog = true },
+            onClick  = { showResetDialog = true },
             modifier = Modifier.width(240.dp).height(50.dp),
-            shape = RoundedCornerShape(14.dp),
-            border = BorderStroke(1.dp, Bad.copy(alpha = 0.5f)),
-            colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Bad.copy(alpha = 0.08f))
+                       shape    = RoundedCornerShape(14.dp),
+                       border   = BorderStroke(1.dp, Bad.copy(alpha = 0.5f)),
+                       colors   = ButtonDefaults.outlinedButtonColors(backgroundColor = Bad.copy(alpha = 0.08f))
         ) {
             Text("Reset Account", color = Bad, fontWeight = FontWeight.Bold, fontSize = 15.sp)
         }
@@ -1121,19 +1190,15 @@ private fun SettingsView(onReset: () -> Unit, onSignOut: () -> Unit) {
         Spacer(Modifier.height(12.dp))
         Text(
             "Reset wipes portfolio & restores \$1,000,000",
-            color = Text2.copy(alpha = 0.6f), fontSize = 11.sp
+             color = Text2.copy(alpha = 0.6f), fontSize = 11.sp
         )
     }
 }
 
 @Preview
 @Composable
-fun PreviewAppMobile() {
-    StockFlowApp()
-}
+fun PreviewAppMobile() { StockFlowApp() }
 
 @Preview
 @Composable
-fun PreviewAppDesktop() {
-    StockFlowApp()
-}
+fun PreviewAppDesktop() { StockFlowApp() }

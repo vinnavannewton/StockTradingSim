@@ -1,41 +1,29 @@
 package com.stock.model
 
-import kotlin.random.Random
+import androidx.compose.runtime.mutableStateListOf
 
 class Stock(
-    val symbol: String,
-    val name: String,
-    val sector: String,
+    val symbol  : String,
+    val name    : String,
+    val sector  : String,
     initialPrice: Double,
 ) {
     var price: Double = initialPrice
     private set
-    var previousPrice: Double = initialPrice
-    private set
-    val openPrice: Double = initialPrice
-    var dayHigh: Double = initialPrice
-    private set
-    var dayLow: Double = initialPrice
-    private set
 
-    val changePercent: Double
-    get() = if (openPrice == 0.0) 0.0 else ((price - openPrice) / openPrice) * 100.0
+    // Rolling price history: Pair(epochMillis, price)
+    // Max 500 points — about 8 minutes at 1-second ticks
+    val priceHistory = mutableStateListOf<Pair<Long, Double>>()
 
-    // Called by Finnhub real-price updates
-    fun updatePriceFrom(newPrice: Double) {
-        if (newPrice <= 0.0) return
-            previousPrice = price
-            price = newPrice
-            dayHigh = maxOf(dayHigh, price)
-            dayLow = minOf(dayLow, price)
+    init {
+        // Seed history with the initial price so the chart is never empty
+        priceHistory.add(System.currentTimeMillis() to initialPrice)
     }
 
-    // Kept as fallback if Finnhub returns 0 for a symbol
-    fun updatePrice() {
-        previousPrice = price
-        val change = (Random.nextDouble() * 0.004) - 0.002
-        price = (price * (1.0 + change)).coerceAtLeast(0.01)
-        dayHigh = maxOf(dayHigh, price)
-        dayLow = minOf(dayLow, price)
+    /** Called by Market every simulation tick. */
+    fun updatePrice(newPrice: Double) {
+        price = newPrice
+        priceHistory.add(System.currentTimeMillis() to newPrice)
+        if (priceHistory.size > 500) priceHistory.removeAt(0)
     }
 }
