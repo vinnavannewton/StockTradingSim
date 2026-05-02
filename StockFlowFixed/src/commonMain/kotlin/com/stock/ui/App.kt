@@ -76,7 +76,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
 import com.stock.api.SupabaseManager
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.TextButton
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.BorderStroke
 
 // ── Colours ────────────────────────────────────────────────────────────────
 private val Background = Color(0xFF07090F)
@@ -141,29 +146,43 @@ private fun fakeUiState(): UiState {
     )
 }
 
+// ── Auth state ───────────────────────────────────────────────────────────────
+private enum class AuthState { CHECKING, LOGGED_OUT, LOGGED_IN }
+
 // ── Root composable ─────────────────────────────────────────────────────────
 @Composable
 fun StockFlowApp() {
     val isPreview = LocalInspectionMode.current
     val scope     = rememberCoroutineScope()
 
-    var isLoggedIn  by remember { mutableStateOf(if (isPreview) true else SupabaseManager.isLoggedIn()) }
-    var isLoading   by remember { mutableStateOf(!isPreview) }
+    // Start as CHECKING so we wait for session restore before showing login
+    var authState   by remember { mutableStateOf(if (isPreview) AuthState.LOGGED_IN else AuthState.CHECKING) }
+    var isLoading   by remember { mutableStateOf(false) }
     val market      = remember { if (isPreview) null else Market() }
     var user        by remember { mutableStateOf<User?>(if (isPreview) User(1_000_000.0) else null) }
 
     val uiStateFlow = remember { MutableStateFlow(if (isPreview) fakeUiState() else UiState.empty()) }
     val uiState     by uiStateFlow.collectAsState()
 
-    LaunchedEffect(isLoggedIn) {
-        if (!isPreview && isLoggedIn) {
+    // On first launch: restore persisted session before rendering login/main screen
+    LaunchedEffect(Unit) {
+        if (!isPreview) {
+            val hasSession = SupabaseManager.restoreSession()
+            authState = if (hasSession) AuthState.LOGGED_IN else AuthState.LOGGED_OUT
+        }
+    }
+
+    // Whenever we become logged in, load user data
+    LaunchedEffect(authState) {
+        if (!isPreview && authState == AuthState.LOGGED_IN) {
+            isLoading = true
             user = DataStore.load(1_000_000.0)
             uiStateFlow.value = UiState.from(user!!, market!!)
             isLoading = false
         }
     }
 
-    if (!isPreview && isLoggedIn) {
+    if (!isPreview && authState == AuthState.LOGGED_IN) {
         DisposableEffect(Unit) {
             market!!.setOnUpdateCallback {
                 user?.let { uiStateFlow.value = UiState.from(it, market) }
@@ -191,40 +210,59 @@ fun StockFlowApp() {
     val signOut: () -> Unit = {
         scope.launch {
             SupabaseManager.signOut()
-            isLoggedIn = false
-            isLoading = true
-            user = null
             market?.stopSimulation()
+            user = null
+            uiStateFlow.value = UiState.empty()
+            authState = AuthState.LOGGED_OUT
         }
     }
 
-    if (!isLoggedIn) {
-        LoginScreen(onLoginSuccess = { isLoggedIn = true })
-        return
-    }
-
-    MaterialTheme {
-        Surface(color = Background, modifier = Modifier.fillMaxSize()) {
-            if (isLoading) {
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        CircularProgressIndicator(color = Accent)
-                        Spacer(Modifier.height(12.dp))
-                        Text("Loading your portfolio...", color = Text2, fontSize = 14.sp)
+    // ── Show appropriate screen based on auth state ────────────────────────
+    when (authState) {
+        AuthState.CHECKING -> {
+            // Splash / session restore in progress
+            MaterialTheme {
+                Surface(color = Background, modifier = Modifier.fillMaxSize()) {
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            CircularProgressIndicator(color = Accent)
+                            Spacer(Modifier.height(16.dp))
+                            Text("StockFlow", color = Accent, fontSize = 28.sp, fontWeight = FontWeight.Bold)
+                            Spacer(Modifier.height(8.dp))
+                            Text("Restoring session...", color = Text2, fontSize = 13.sp)
+                        }
                     }
                 }
-                return@Surface
             }
-            val currentUser = user ?: return@Surface
-            AppContent(
-                market    = market,
-                user      = currentUser,
-                state     = uiState,
-                sync      = sync,
-                onReset   = reset,
-                onSignOut = signOut,
-                isPreview = isPreview,
-            )
+        }
+        AuthState.LOGGED_OUT -> {
+            LoginScreen(onLoginSuccess = { authState = AuthState.LOGGED_IN })
+        }
+        AuthState.LOGGED_IN -> {
+            MaterialTheme {
+                Surface(color = Background, modifier = Modifier.fillMaxSize()) {
+                    if (isLoading) {
+                        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                CircularProgressIndicator(color = Accent)
+                                Spacer(Modifier.height(12.dp))
+                                Text("Loading your portfolio...", color = Text2, fontSize = 14.sp)
+                            }
+                        }
+                        return@Surface
+                    }
+                    val currentUser = user ?: return@Surface
+                    AppContent(
+                        market    = market,
+                        user      = currentUser,
+                        state     = uiState,
+                        sync      = sync,
+                        onReset   = reset,
+                        onSignOut = signOut,
+                        isPreview = isPreview,
+                    )
+                }
+            }
         }
     }
 }
@@ -961,34 +999,110 @@ private fun HistoryList(transactions: List<Transaction>) {
 }
 @Composable
 private fun SettingsView(onReset: () -> Unit, onSignOut: () -> Unit) {
+    var showResetDialog by remember { mutableStateOf(false) }
+
+    if (showResetDialog) {
+        AlertDialog(
+            onDismissRequest = { showResetDialog = false },
+            backgroundColor = Surface2,
+            shape = RoundedCornerShape(20.dp),
+            title = {
+                Text("Reset Account?", color = Text1, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            },
+            text = {
+                Text(
+                    "This will wipe your entire portfolio, watchlist, transaction history, and restore your balance to \$1,000,000. This cannot be undone.",
+                    color = Text2, fontSize = 14.sp
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = { showResetDialog = false; onReset() },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Bad),
+                    shape = RoundedCornerShape(10.dp),
+                    elevation = ButtonDefaults.elevation(0.dp)
+                ) { Text("Reset", color = Color.White, fontWeight = FontWeight.Bold) }
+            },
+            dismissButton = {
+                TextButton(onClick = { showResetDialog = false }) {
+                    Text("Cancel", color = Text2)
+                }
+            }
+        )
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
-           verticalArrangement = Arrangement.Center,
-           horizontalAlignment = Alignment.CenterHorizontally
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Logo
         Box(
             modifier = Modifier
-            .size(80.dp)
-            .clip(RoundedCornerShape(20.dp))
-            .background(Accent.copy(alpha = 0.1f)),
+                .size(88.dp)
+                .clip(RoundedCornerShape(24.dp))
+                .background(
+                    Brush.linearGradient(listOf(Accent, Color(0xFF818CF8)))
+                ),
             contentAlignment = Alignment.Center
         ) {
-            Icon(Icons.Default.TrendingUp, contentDescription = null, tint = Accent, modifier = Modifier.size(40.dp))
+            Icon(Icons.Default.TrendingUp, contentDescription = null, tint = Color.White, modifier = Modifier.size(44.dp))
         }
-        Spacer(Modifier.height(24.dp))
-        Text("StockFlow Pro", color = Text1, fontSize = 24.sp, fontWeight = FontWeight.Black)
+        Spacer(Modifier.height(20.dp))
+        Text("StockFlow", color = Text1, fontSize = 28.sp, fontWeight = FontWeight.Black)
         Text("Next-Gen Trading Simulator", color = Text2, fontSize = 14.sp)
+        Spacer(Modifier.height(8.dp))
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .background(Accent.copy(alpha = 0.12f))
+                .padding(horizontal = 12.dp, vertical = 4.dp)
+        ) {
+            Text("v1.0.0 · Cloud Synced", color = Accent, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+        }
+
         Spacer(Modifier.height(48.dp))
+
+        // Sign Out button
         Button(
             onClick = onSignOut,
+            modifier = Modifier.width(240.dp).height(50.dp),
+            shape = RoundedCornerShape(14.dp),
             colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-               elevation = ButtonDefaults.elevation(0.dp, 0.dp),
-               modifier = Modifier
-               .clip(RoundedCornerShape(12.dp))
-               .background(Surface2)
+            elevation = ButtonDefaults.elevation(0.dp, 0.dp),
+            contentPadding = PaddingValues(0.dp)
         ) {
-            Text("Sign Out", color = Text2, fontWeight = FontWeight.Bold)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        Brush.horizontalGradient(listOf(Accent, Color(0xFF818CF8))),
+                        RoundedCornerShape(14.dp)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text("Sign Out", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+            }
         }
+
+        Spacer(Modifier.height(16.dp))
+
+        // Reset account (destructive)
+        OutlinedButton(
+            onClick = { showResetDialog = true },
+            modifier = Modifier.width(240.dp).height(50.dp),
+            shape = RoundedCornerShape(14.dp),
+            border = BorderStroke(1.dp, Bad.copy(alpha = 0.5f)),
+            colors = ButtonDefaults.outlinedButtonColors(backgroundColor = Bad.copy(alpha = 0.08f))
+        ) {
+            Text("Reset Account", color = Bad, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+        }
+
+        Spacer(Modifier.height(12.dp))
+        Text(
+            "Reset wipes portfolio & restores \$1,000,000",
+            color = Text2.copy(alpha = 0.6f), fontSize = 11.sp
+        )
     }
 }
 
