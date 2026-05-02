@@ -73,11 +73,8 @@ import com.stock.util.formatMoney
 import com.stock.util.formatSignedMoney
 import kotlinx.coroutines.flow.MutableStateFlow
 import androidx.compose.runtime.rememberCoroutineScope
-import com.stock.storage.loadUserFromCloud
-import com.stock.storage.saveUserToCloud
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
 import com.stock.api.SupabaseManager
 import androidx.compose.material.AlertDialog
@@ -190,7 +187,7 @@ fun StockFlowApp() {
     if (!isPreview) {
         DisposableEffect(Unit) {
             scope.launch {
-                val cloudUser = loadUserFromCloud(1_000_000.0)
+                val cloudUser = SupabaseManager.loadUser(1_000_000.0)
                 if (cloudUser != null) {
                     user = cloudUser
                     DataStore.save(cloudUser)
@@ -211,7 +208,7 @@ fun StockFlowApp() {
             scope.launch {
                 val u = user ?: return@launch
                 DataStore.save(u)
-                saveUserToCloud(u)
+                SupabaseManager.saveUser(u)
                 uiStateFlow.value = UiState.from(u, market!!)
             }
         }
@@ -224,7 +221,7 @@ fun StockFlowApp() {
                 val fresh = User(1_000_000.0)
                 user = fresh
                 DataStore.save(fresh)
-                saveUserToCloud(fresh)
+                SupabaseManager.saveUser(fresh)
                 market?.let { uiStateFlow.value = UiState.from(fresh, it) }
             }
         }
