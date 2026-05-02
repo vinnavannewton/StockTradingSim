@@ -1,10 +1,27 @@
 {
     "logs": [
         {
-            "outputFile": "com.stock.stockflow-mergeDebugResources-43:/values-be/values-be.xml",
+            "outputFile": "com.stock.stockflow-mergeDebugResources-44:/values-be/values-be.xml",
             "map": [
                 {
-                    "source": "/home/vinnavan/.gradle/caches/9.3.1/transforms/33c0597ed0fd9cfa7ade02ccf3b69bec/transformed/core-1.13.1/res/values-be/values-be.xml",
+                    "source": "/home/vinnavan/.gradle/caches/9.3.1/transforms/0f213b8b2d21df27df91fdab0c6572b4/transformed/browser-1.8.0/res/values-be/values-be.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,164,272,384",
+                        "endColumns": "108,107,111,106",
+                        "endOffsets": "159,267,379,486"
+                    },
+                    "to": {
+                        "startLines": "11,15,16,17",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "1013,1405,1513,1625",
+                        "endColumns": "108,107,111,106",
+                        "endOffsets": "1117,1508,1620,1727"
+                    }
+                },
+                {
+                    "source": "/home/vinnavan/.gradle/caches/9.3.1/transforms/f1ffec234e6ac33c07a9aba62ac372aa/transformed/core-1.13.1/res/values-be/values-be.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -13,32 +30,15 @@
                         "endOffsets": "148,250,350,451,557,660,781,882"
                     },
                     "to": {
-                        "startLines": "2,3,4,5,6,7,8,24",
+                        "startLines": "2,3,4,5,6,7,8,28",
                         "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,203,305,405,506,612,715,2115",
+                        "startOffsets": "105,203,305,405,506,612,715,2551",
                         "endColumns": "97,101,99,100,105,102,120,100",
-                        "endOffsets": "198,300,400,501,607,710,831,2211"
+                        "endOffsets": "198,300,400,501,607,710,831,2647"
                     }
                 },
                 {
-                    "source": "/home/vinnavan/.gradle/caches/9.3.1/transforms/f623f5a5f22998e9e27bc9e4ef8f8ad9/transformed/ui-release/res/values-be/values-be.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,198,282,376,479,565,645,734,822,904,987,1074,1146,1230,1308,1384,1469,1539",
-                        "endColumns": "92,83,93,102,85,79,88,87,81,82,86,71,83,77,75,84,69,122",
-                        "endOffsets": "193,277,371,474,560,640,729,817,899,982,1069,1141,1225,1303,1379,1464,1534,1657"
-                    },
-                    "to": {
-                        "startLines": "9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,25,26,27",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "836,929,1013,1107,1210,1296,1376,1465,1553,1635,1718,1805,1877,1961,2039,2216,2301,2371",
-                        "endColumns": "92,83,93,102,85,79,88,87,81,82,86,71,83,77,75,84,69,122",
-                        "endOffsets": "924,1008,1102,1205,1291,1371,1460,1548,1630,1713,1800,1872,1956,2034,2110,2296,2366,2489"
-                    }
-                },
-                {
-                    "source": "/home/vinnavan/.gradle/caches/9.3.1/transforms/e898eabeca90528718cde46bf5b1b96a/transformed/foundation-release/res/values-be/values-be.xml",
+                    "source": "/home/vinnavan/.gradle/caches/9.3.1/transforms/4b714ff886186448d538547ba70baf07/transformed/foundation-release/res/values-be/values-be.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",
@@ -47,11 +47,28 @@
                         "endOffsets": "137,240"
                     },
                     "to": {
-                        "startLines": "28,29",
+                        "startLines": "32,33",
                         "startColumns": "4,4",
-                        "startOffsets": "2494,2581",
+                        "startOffsets": "2930,3017",
                         "endColumns": "86,102",
-                        "endOffsets": "2576,2679"
+                        "endOffsets": "3012,3115"
+                    }
+                },
+                {
+                    "source": "/home/vinnavan/.gradle/caches/9.3.1/transforms/24a7cfb18f47806f93ebd0d3e71ce00e/transformed/ui-release/res/values-be/values-be.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,198,282,376,479,565,645,734,822,904,987,1074,1146,1230,1308,1384,1469,1539",
+                        "endColumns": "92,83,93,102,85,79,88,87,81,82,86,71,83,77,75,84,69,122",
+                        "endOffsets": "193,277,371,474,560,640,729,817,899,982,1069,1141,1225,1303,1379,1464,1534,1657"
+                    },
+                    "to": {
+                        "startLines": "9,10,12,13,14,18,19,20,21,22,23,24,25,26,27,29,30,31",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "836,929,1122,1216,1319,1732,1812,1901,1989,2071,2154,2241,2313,2397,2475,2652,2737,2807",
+                        "endColumns": "92,83,93,102,85,79,88,87,81,82,86,71,83,77,75,84,69,122",
+                        "endOffsets": "924,1008,1211,1314,1400,1807,1896,1984,2066,2149,2236,2308,2392,2470,2546,2732,2802,2925"
                     }
                 }
             ]

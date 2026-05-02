@@ -1,10 +1,27 @@
 {
     "logs": [
         {
-            "outputFile": "com.stock.stockflow-mergeDebugResources-43:/values-pl/values-pl.xml",
+            "outputFile": "com.stock.stockflow-mergeDebugResources-44:/values-pl/values-pl.xml",
             "map": [
                 {
-                    "source": "/home/vinnavan/.gradle/caches/9.3.1/transforms/f623f5a5f22998e9e27bc9e4ef8f8ad9/transformed/ui-release/res/values-pl/values-pl.xml",
+                    "source": "/home/vinnavan/.gradle/caches/9.3.1/transforms/0f213b8b2d21df27df91fdab0c6572b4/transformed/browser-1.8.0/res/values-pl/values-pl.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,155,254,369",
+                        "endColumns": "99,98,114,103",
+                        "endOffsets": "150,249,364,468"
+                    },
+                    "to": {
+                        "startLines": "11,15,16,17",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "1022,1413,1512,1627",
+                        "endColumns": "99,98,114,103",
+                        "endOffsets": "1117,1507,1622,1726"
+                    }
+                },
+                {
+                    "source": "/home/vinnavan/.gradle/caches/9.3.1/transforms/24a7cfb18f47806f93ebd0d3e71ce00e/transformed/ui-release/res/values-pl/values-pl.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -13,15 +30,15 @@
                         "endOffsets": "195,280,389,494,571,648,741,831,914,997,1084,1156,1232,1310,1386,1468,1536,1656"
                     },
                     "to": {
-                        "startLines": "9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,25,26,27",
+                        "startLines": "9,10,12,13,14,18,19,20,21,22,23,24,25,26,27,29,30,31",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "842,937,1022,1131,1236,1313,1390,1483,1573,1656,1739,1826,1898,1974,2052,2229,2311,2379",
+                        "startOffsets": "842,937,1122,1231,1336,1731,1808,1901,1991,2074,2157,2244,2316,2392,2470,2647,2729,2797",
                         "endColumns": "94,84,108,104,76,76,92,89,82,82,86,71,75,77,75,81,67,119",
-                        "endOffsets": "932,1017,1126,1231,1308,1385,1478,1568,1651,1734,1821,1893,1969,2047,2123,2306,2374,2494"
+                        "endOffsets": "932,1017,1226,1331,1408,1803,1896,1986,2069,2152,2239,2311,2387,2465,2541,2724,2792,2912"
                     }
                 },
                 {
-                    "source": "/home/vinnavan/.gradle/caches/9.3.1/transforms/33c0597ed0fd9cfa7ade02ccf3b69bec/transformed/core-1.13.1/res/values-pl/values-pl.xml",
+                    "source": "/home/vinnavan/.gradle/caches/9.3.1/transforms/f1ffec234e6ac33c07a9aba62ac372aa/transformed/core-1.13.1/res/values-pl/values-pl.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -30,15 +47,15 @@
                         "endOffsets": "147,249,347,446,560,665,787,888"
                     },
                     "to": {
-                        "startLines": "2,3,4,5,6,7,8,24",
+                        "startLines": "2,3,4,5,6,7,8,28",
                         "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,202,304,402,501,615,720,2128",
+                        "startOffsets": "105,202,304,402,501,615,720,2546",
                         "endColumns": "96,101,97,98,113,104,121,100",
-                        "endOffsets": "197,299,397,496,610,715,837,2224"
+                        "endOffsets": "197,299,397,496,610,715,837,2642"
                     }
                 },
                 {
-                    "source": "/home/vinnavan/.gradle/caches/9.3.1/transforms/e898eabeca90528718cde46bf5b1b96a/transformed/foundation-release/res/values-pl/values-pl.xml",
+                    "source": "/home/vinnavan/.gradle/caches/9.3.1/transforms/4b714ff886186448d538547ba70baf07/transformed/foundation-release/res/values-pl/values-pl.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",
@@ -47,11 +64,11 @@
                         "endOffsets": "138,226"
                     },
                     "to": {
-                        "startLines": "28,29",
+                        "startLines": "32,33",
                         "startColumns": "4,4",
-                        "startOffsets": "2499,2587",
+                        "startOffsets": "2917,3005",
                         "endColumns": "87,87",
-                        "endOffsets": "2582,2670"
+                        "endOffsets": "3000,3088"
                     }
                 }
             ]
