@@ -72,6 +72,10 @@ import com.stock.storage.DataStore
 import com.stock.util.formatMoney
 import com.stock.util.formatSignedMoney
 import kotlinx.coroutines.flow.MutableStateFlow
+import androidx.compose.runtime.rememberCoroutineScope
+import com.stock.storage.loadUserFromCloud
+import com.stock.storage.saveUserToCloud
+import kotlinx.coroutines.launch
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
@@ -153,7 +157,7 @@ private enum class AuthState { CHECKING, LOGGED_OUT, LOGGED_IN }
 @Composable
 fun StockFlowApp() {
     val isPreview = LocalInspectionMode.current
-    val scope     = rememberCoroutineScope()
+
 
     // Start as CHECKING so we wait for session restore before showing login
     var authState   by remember { mutableStateOf(if (isPreview) AuthState.LOGGED_IN else AuthState.CHECKING) }
@@ -163,6 +167,7 @@ fun StockFlowApp() {
 
     val uiStateFlow = remember { MutableStateFlow(if (isPreview) fakeUiState() else UiState.empty()) }
     val uiState     by uiStateFlow.collectAsState()
+    val scope = rememberCoroutineScope()
 
     // On first launch: restore persisted session before rendering login/main screen
     LaunchedEffect(Unit) {
@@ -182,28 +187,46 @@ fun StockFlowApp() {
         }
     }
 
-    if (!isPreview && authState == AuthState.LOGGED_IN) {
+    if (!isPreview) {
         DisposableEffect(Unit) {
+            scope.launch {
+                val cloudUser = loadUserFromCloud(1_000_000.0)
+                if (cloudUser != null) {
+                    user = cloudUser
+                    DataStore.save(cloudUser)
+                    uiStateFlow.value = UiState.from(cloudUser, market!!)
+                }
+            }
             market!!.setOnUpdateCallback {
-                user?.let { uiStateFlow.value = UiState.from(it, market) }
+                val u = user ?: return@setOnUpdateCallback
+                uiStateFlow.value = UiState.from(u, market)
             }
             market.startSimulation()
             onDispose { market.stopSimulation() }
         }
     }
 
-    val sync: () -> Unit = sync@{
-        val u = user ?: return@sync
-        uiStateFlow.value = UiState.from(u, market!!)
-        scope.launch { DataStore.save(u) }
+    val sync: () -> Unit = {
+        if (!isPreview) {
+            scope.launch {
+                val u = user ?: return@launch
+                DataStore.save(u)
+                saveUserToCloud(u)
+                uiStateFlow.value = UiState.from(u, market!!)
+            }
+        }
     }
 
     val reset: () -> Unit = {
         if (!isPreview) {
-            val fresh = User(1_000_000.0)
-            user = fresh
-            uiStateFlow.value = UiState.from(fresh, market!!)
-            scope.launch { DataStore.reset() }
+            scope.launch {
+                DataStore.reset()
+                val fresh = User(1_000_000.0)
+                user = fresh
+                DataStore.save(fresh)
+                saveUserToCloud(fresh)
+                market?.let { uiStateFlow.value = UiState.from(fresh, it) }
+            }
         }
     }
 
