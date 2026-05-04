@@ -23,9 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -36,20 +38,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.stock.api.SupabaseManager
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
-// ── Colour tokens ────────────────────────────────────────────────────────────
-private val Bg          = Color(0xFF07090F)
-private val Surf1       = Color(0xFF0F172A)
-private val Surf2       = Color(0xFF1E293B)
-private val Accent      = Color(0xFF38BDF8)
-private val AccentDark  = Color(0xFF0284C7)
-private val Good        = Color(0xFF4ADE80)
-private val Bad         = Color(0xFFF87171)
-private val Text1       = Color(0xFFF8FAFC)
-private val Text2       = Color(0xFF94A3B8)
-private val Border      = Color(0xFF334155)
-private val GlassWhite  = Color(0x0DFFFFFF)
 
 @Composable
 fun LoginScreen(onLoginSuccess: () -> Unit) {
@@ -64,396 +54,459 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
     var errorMsg    by remember { mutableStateOf("") }
     var successMsg  by remember { mutableStateOf("") }
 
+    // Entrance animation
+    var visible by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) { delay(100); visible = true }
+
     // Animated pulse for the logo orb
-    val pulse = rememberInfiniteTransition()
+    val pulse = rememberInfiniteTransition(label = "logoPulse")
     val orbScale by pulse.animateFloat(
-        initialValue = 0.95f, targetValue = 1.05f,
-        animationSpec = infiniteRepeatable(tween(2000, easing = EaseInOutSine), RepeatMode.Reverse)
+        initialValue = 0.92f, targetValue = 1.08f,
+        animationSpec = infiniteRepeatable(
+            tween(2400, easing = EaseInOutSine), RepeatMode.Reverse
+        ),
+        label = "orbScale"
+    )
+    val orbGlow by pulse.animateFloat(
+        initialValue = 0.15f, targetValue = 0.35f,
+        animationSpec = infiniteRepeatable(
+            tween(2400, easing = EaseInOutSine), RepeatMode.Reverse
+        ),
+        label = "orbGlow"
+    )
+
+    // Floating particles animation
+    val particleTransition = rememberInfiniteTransition(label = "particles")
+    val particleY1 by particleTransition.animateFloat(
+        initialValue = -20f, targetValue = 20f,
+        animationSpec = infiniteRepeatable(tween(4000, easing = EaseInOutSine), RepeatMode.Reverse),
+        label = "py1"
+    )
+    val particleY2 by particleTransition.animateFloat(
+        initialValue = 15f, targetValue = -15f,
+        animationSpec = infiniteRepeatable(tween(3500, easing = EaseInOutSine), RepeatMode.Reverse),
+        label = "py2"
     )
 
     MaterialTheme {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    Brush.radialGradient(
-                        colors = listOf(Color(0xFF0F2942), Bg),
-                        radius = 1200f
-                    )
-                ),
+                .background(SFGradient.bgRadial),
             contentAlignment = Alignment.Center
         ) {
-            // Background decorative blobs
+            // ── Decorative background orbs ────────────────────────────────────
             Box(
                 modifier = Modifier
-                    .size(320.dp)
-                    .offset(x = (-80).dp, y = (-160).dp)
+                    .size(400.dp)
+                    .offset(x = (-120).dp, y = (-200).dp)
+                    .graphicsLayer { translationY = particleY1 }
                     .clip(CircleShape)
-                    .background(Accent.copy(alpha = 0.06f))
+                    .background(SFColor.Accent.copy(alpha = 0.05f))
+                    .blur(100.dp)
+            )
+            Box(
+                modifier = Modifier
+                    .size(300.dp)
+                    .offset(x = 140.dp, y = 260.dp)
+                    .graphicsLayer { translationY = particleY2 }
+                    .clip(CircleShape)
+                    .background(SFColor.Indigo.copy(alpha = 0.04f))
                     .blur(80.dp)
             )
             Box(
                 modifier = Modifier
-                    .size(260.dp)
-                    .offset(x = 100.dp, y = 200.dp)
+                    .size(200.dp)
+                    .offset(x = 180.dp, y = (-100).dp)
+                    .graphicsLayer { translationY = particleY1 * 0.5f }
                     .clip(CircleShape)
-                    .background(Color(0xFF818CF8).copy(alpha = 0.05f))
+                    .background(SFColor.Gain.copy(alpha = 0.03f))
                     .blur(60.dp)
             )
 
-            Column(
-                modifier = Modifier
-                    .width(400.dp)
-                    .padding(horizontal = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            AnimatedVisibility(
+                visible = visible,
+                enter = fadeIn(tween(600)) + slideInVertically(tween(600)) { 40 },
             ) {
-                // ── Logo ─────────────────────────────────────────────────────
-                Box(
-                    modifier = Modifier
-                        .size((68 * orbScale).dp)
-                        .clip(RoundedCornerShape(20.dp))
-                        .background(
-                            Brush.linearGradient(listOf(Accent, Color(0xFF818CF8)))
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        Icons.Default.TrendingUp,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(36.dp)
-                    )
-                }
-
-                Spacer(Modifier.height(20.dp))
-
-                Text(
-                    "StockFlow",
-                    color = Text1,
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Black,
-                    letterSpacing = (-0.5).sp
-                )
-                Text(
-                    "Next-Gen Trading Simulator",
-                    color = Text2,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Normal
-                )
-
-                Spacer(Modifier.height(32.dp))
-
-                // ── Glass card ────────────────────────────────────────────────
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(24.dp))
-                        .background(
-                            Brush.verticalGradient(
-                                listOf(Color(0xFF111827).copy(alpha = 0.95f), Surf1)
-                            )
-                        )
-                        .border(1.dp, Border.copy(alpha = 0.5f), RoundedCornerShape(24.dp))
-                        .padding(28.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                        .width(420.dp)
+                        .padding(horizontal = 20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Tab selector: Log In / Sign Up
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(Surf2),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        listOf(false to "Log In", true to "Sign Up").forEach { (su, label) ->
-                            val selected = isSignUp == su
-                            Box(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(
-                                        if (selected)
-                                            Brush.horizontalGradient(listOf(Accent, Color(0xFF818CF8)))
-                                        else
-                                            Brush.horizontalGradient(listOf(Color.Transparent, Color.Transparent))
-                                    )
-                                    .clickable(
-                                        indication = null,
-                                        interactionSource = remember { MutableInteractionSource() }
-                                    ) {
-                                        if (!isLoading) {
-                                            isSignUp = su
-                                            errorMsg = ""
-                                            successMsg = ""
-                                        }
-                                    }
-                                    .padding(vertical = 12.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    label,
-                                    color = if (selected) Color.White else Text2,
-                                    fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-                                    fontSize = 14.sp
-                                )
-                            }
+                    // ── Animated Logo ──────────────────────────────────────────
+                    Box(contentAlignment = Alignment.Center) {
+                        // Outer glow ring
+                        Box(
+                            modifier = Modifier
+                                .size((90 * orbScale).dp)
+                                .clip(RoundedCornerShape(22.dp))
+                                .background(SFColor.Accent.copy(alpha = orbGlow * 0.3f))
+                                .blur(20.dp)
+                        )
+                        // Main logo
+                        Box(
+                            modifier = Modifier
+                                .size((72 * orbScale).dp)
+                                .clip(RoundedCornerShape(20.dp))
+                                .background(SFGradient.accentBrand),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                Icons.Default.TrendingUp,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(38.dp)
+                            )
                         }
                     }
 
+                    Spacer(Modifier.height(24.dp))
+
+                    Text(
+                        "StockFlow",
+                        color = SFColor.TextPrimary,
+                        fontSize = 34.sp,
+                        fontWeight = FontWeight.Black,
+                        letterSpacing = (-0.8).sp
+                    )
                     Spacer(Modifier.height(4.dp))
-
-                    // Email field
-                    LoginField(
-                        value = email,
-                        onValueChange = { email = it; errorMsg = ""; successMsg = "" },
-                        label = "Email address",
-                        leadingIcon = {
-                            Icon(Icons.Default.Email, null, tint = if (email.isNotEmpty()) Accent else Text2, modifier = Modifier.size(20.dp))
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Email,
-                            imeAction = ImeAction.Next
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                        )
+                    Text(
+                        "Next-Gen Trading Simulator",
+                        color = SFColor.TextSecondary,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Normal,
+                        letterSpacing = 0.5.sp
                     )
 
-                    // Password field
-                    LoginField(
-                        value = password,
-                        onValueChange = { password = it; errorMsg = ""; successMsg = "" },
-                        label = "Password",
-                        leadingIcon = {
-                            Icon(Icons.Default.Lock, null, tint = if (password.isNotEmpty()) Accent else Text2, modifier = Modifier.size(20.dp))
-                        },
-                        visualTransformation = if (showPass) VisualTransformation.None else PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Password,
-                            imeAction = ImeAction.Done
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onDone = { focusManager.clearFocus() }
-                        ),
-                        trailingIcon = {
-                            IconButton(onClick = { showPass = !showPass }) {
-                                Icon(
-                                    if (showPass) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                    contentDescription = if (showPass) "Hide password" else "Show password",
-                                    tint = Text2,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
-                        }
-                    )
+                    Spacer(Modifier.height(36.dp))
 
-                    // Error / Success message
-                    AnimatedVisibility(
-                        visible = errorMsg.isNotEmpty() || successMsg.isNotEmpty(),
-                        enter = fadeIn() + expandVertically(),
-                        exit = fadeOut() + shrinkVertically()
+                    // ── Glass card ─────────────────────────────────────────────
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(SFShape.XXLarge)
+                            .background(SFGradient.loginCard)
+                            .border(1.dp, SFColor.Border.copy(alpha = 0.6f), SFShape.XXLarge)
+                            .padding(28.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        val isError = errorMsg.isNotEmpty()
-                        val msg = if (isError) errorMsg else successMsg
+                        // Tab selector: Log In / Sign Up
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(if (isError) Bad.copy(alpha = 0.12f) else Good.copy(alpha = 0.12f))
-                                .padding(horizontal = 14.dp, vertical = 10.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                                .clip(SFShape.Medium)
+                                .background(SFColor.Surface2),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            listOf(false to "Log In", true to "Sign Up").forEach { (su, label) ->
+                                val selected = isSignUp == su
+                                Box(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .background(
+                                            if (selected)
+                                                SFGradient.accentBrand
+                                            else
+                                                Brush.horizontalGradient(listOf(Color.Transparent, Color.Transparent))
+                                        )
+                                        .clickable(
+                                            indication = null,
+                                            interactionSource = remember { MutableInteractionSource() }
+                                        ) {
+                                            if (!isLoading) {
+                                                isSignUp = su
+                                                errorMsg = ""
+                                                successMsg = ""
+                                            }
+                                        }
+                                        .padding(vertical = 13.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        label,
+                                        color = if (selected) Color.White else SFColor.TextSecondary,
+                                        fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
+                                        fontSize = 14.sp,
+                                        letterSpacing = 0.3.sp
+                                    )
+                                }
+                            }
+                        }
+
+                        Spacer(Modifier.height(4.dp))
+
+                        // Email field
+                        LoginField(
+                            value = email,
+                            onValueChange = { email = it; errorMsg = ""; successMsg = "" },
+                            label = "Email address",
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Default.Email, null,
+                                    tint = if (email.isNotEmpty()) SFColor.Accent else SFColor.TextMuted,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Email,
+                                imeAction = ImeAction.Next
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                            )
+                        )
+
+                        // Password field
+                        LoginField(
+                            value = password,
+                            onValueChange = { password = it; errorMsg = ""; successMsg = "" },
+                            label = "Password",
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Default.Lock, null,
+                                    tint = if (password.isNotEmpty()) SFColor.Accent else SFColor.TextMuted,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            },
+                            visualTransformation = if (showPass) VisualTransformation.None
+                                                   else PasswordVisualTransformation(),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Password,
+                                imeAction = ImeAction.Done
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onDone = { focusManager.clearFocus() }
+                            ),
+                            trailingIcon = {
+                                IconButton(onClick = { showPass = !showPass }) {
+                                    Icon(
+                                        if (showPass) Icons.Default.VisibilityOff
+                                        else Icons.Default.Visibility,
+                                        contentDescription = if (showPass) "Hide" else "Show",
+                                        tint = SFColor.TextMuted,
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                }
+                            }
+                        )
+
+                        // Error / Success message
+                        AnimatedVisibility(
+                            visible = errorMsg.isNotEmpty() || successMsg.isNotEmpty(),
+                            enter = fadeIn(tween(200)) + expandVertically(tween(200)),
+                            exit = fadeOut(tween(150)) + shrinkVertically(tween(150))
+                        ) {
+                            val isError = errorMsg.isNotEmpty()
+                            val msg = if (isError) errorMsg else successMsg
+                            val bgColor = if (isError) SFColor.Loss else SFColor.Gain
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(SFShape.Medium)
+                                    .background(bgColor.copy(alpha = 0.10f))
+                                    .border(1.dp, bgColor.copy(alpha = 0.2f), SFShape.Medium)
+                                    .padding(horizontal = 14.dp, vertical = 12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(8.dp)
+                                        .clip(CircleShape)
+                                        .background(bgColor)
+                                )
+                                Spacer(Modifier.width(10.dp))
+                                Text(
+                                    msg,
+                                    color = bgColor,
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    lineHeight = 18.sp
+                                )
+                            }
+                        }
+
+                        // Main action button
+                        Button(
+                            onClick = {
+                                val trimmedEmail = email.trim()
+                                if (trimmedEmail.isBlank() || password.isBlank()) {
+                                    errorMsg = "Please fill in all fields"
+                                    return@Button
+                                }
+                                if (!trimmedEmail.contains("@")) {
+                                    errorMsg = "Please enter a valid email"
+                                    return@Button
+                                }
+                                if (password.length < 6) {
+                                    errorMsg = "Password must be at least 6 characters"
+                                    return@Button
+                                }
+                                scope.launch {
+                                    isLoading = true
+                                    errorMsg  = ""
+                                    successMsg = ""
+                                    focusManager.clearFocus()
+
+                                    val result = if (isSignUp)
+                                        SupabaseManager.signUp(trimmedEmail, password)
+                                    else
+                                        SupabaseManager.signIn(trimmedEmail, password)
+
+                                    result.fold(
+                                        onSuccess = {
+                                            if (isSignUp) {
+                                                val loginResult = SupabaseManager.signIn(trimmedEmail, password)
+                                                loginResult.fold(
+                                                    onSuccess = { onLoginSuccess() },
+                                                    onFailure = {
+                                                        successMsg = "Account created! Please log in."
+                                                        isSignUp = false
+                                                    }
+                                                )
+                                            } else {
+                                                onLoginSuccess()
+                                            }
+                                        },
+                                        onFailure = { e ->
+                                            errorMsg = when {
+                                                e.message?.contains("Invalid login", ignoreCase = true) == true ->
+                                                    "Incorrect email or password"
+                                                e.message?.contains("already registered", ignoreCase = true) == true ->
+                                                    "This email is already registered — try logging in"
+                                                e.message?.contains("Email not confirmed", ignoreCase = true) == true ->
+                                                    "Please confirm your email first"
+                                                e.message?.contains("network", ignoreCase = true) == true ->
+                                                    "Network error — check your connection"
+                                                else ->
+                                                    "Something went wrong. Try again."
+                                            }
+                                        }
+                                    )
+                                    isLoading = false
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth().height(54.dp),
+                            enabled = !isLoading,
+                            shape = RoundedCornerShape(14.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = Color.Transparent,
+                                disabledBackgroundColor = Color.Transparent
+                            ),
+                            elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp),
+                            contentPadding = PaddingValues(0.dp)
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .size(8.dp)
-                                    .clip(CircleShape)
-                                    .background(if (isError) Bad else Good)
-                            )
-                            Spacer(Modifier.width(10.dp))
-                            Text(
-                                msg,
-                                color = if (isError) Bad else Good,
-                                fontSize = 13.sp,
-                                fontWeight = FontWeight.Medium
-                            )
+                                    .fillMaxSize()
+                                    .background(
+                                        if (!isLoading) SFGradient.accentBrand
+                                        else Brush.horizontalGradient(
+                                            listOf(SFColor.Surface2, SFColor.Surface2)
+                                        ),
+                                        RoundedCornerShape(14.dp)
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                if (isLoading) {
+                                    CircularProgressIndicator(
+                                        color = SFColor.Accent,
+                                        modifier = Modifier.size(22.dp),
+                                        strokeWidth = 2.dp
+                                    )
+                                } else {
+                                    Text(
+                                        if (isSignUp) "Create Account" else "Sign In",
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 15.sp,
+                                        letterSpacing = 0.5.sp
+                                    )
+                                }
+                            }
                         }
-                    }
 
-                    // Main action button
-                    Button(
-                        onClick = {
-                            val trimmedEmail = email.trim()
-                            if (trimmedEmail.isBlank() || password.isBlank()) {
-                                errorMsg = "Please fill in all fields"
-                                return@Button
-                            }
-                            if (!trimmedEmail.contains("@")) {
-                                errorMsg = "Please enter a valid email"
-                                return@Button
-                            }
-                            if (password.length < 6) {
-                                errorMsg = "Password must be at least 6 characters"
-                                return@Button
-                            }
-                            scope.launch {
-                                isLoading = true
-                                errorMsg  = ""
-                                successMsg = ""
-                                focusManager.clearFocus()
-
-                                val result = if (isSignUp)
-                                    SupabaseManager.signUp(trimmedEmail, password)
-                                else
-                                    SupabaseManager.signIn(trimmedEmail, password)
-
-                                result.fold(
-                                    onSuccess = {
-                                        if (isSignUp) {
-                                            // After sign-up Supabase auto-confirms (email confirm disabled)
-                                            // Try to sign in right away
-                                            val loginResult = SupabaseManager.signIn(trimmedEmail, password)
-                                            loginResult.fold(
-                                                onSuccess = { onLoginSuccess() },
-                                                onFailure = {
-                                                    successMsg = "Account created! Please log in."
-                                                    isSignUp = false
-                                                }
-                                            )
-                                        } else {
-                                            onLoginSuccess()
-                                        }
-                                    },
-                                    onFailure = { e ->
-                                        errorMsg = when {
-                                            e.message?.contains("Invalid login", ignoreCase = true) == true ->
-                                                "Incorrect email or password"
-                                            e.message?.contains("already registered", ignoreCase = true) == true ->
-                                                "This email is already registered — try logging in"
-                                            e.message?.contains("Email not confirmed", ignoreCase = true) == true ->
-                                                "Please confirm your email first"
-                                            e.message?.contains("network", ignoreCase = true) == true ->
-                                                "Network error — check your connection"
-                                            else ->
-                                                "Something went wrong. Try again."
-                                        }
-                                    }
-                                )
-                                isLoading = false
-                            }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(52.dp),
-                        enabled = !isLoading,
-                        shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.Transparent,
-                            disabledBackgroundColor = Color.Transparent
-                        ),
-                        elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp),
-                        contentPadding = PaddingValues(0.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(
-                                    if (!isLoading)
-                                        Brush.horizontalGradient(listOf(Accent, Color(0xFF818CF8)))
-                                    else
-                                        Brush.horizontalGradient(listOf(Surf2, Surf2)),
-                                    RoundedCornerShape(14.dp)
-                                ),
-                            contentAlignment = Alignment.Center
+                        // Divider
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            if (isLoading) {
-                                CircularProgressIndicator(
-                                    color = Accent,
-                                    modifier = Modifier.size(22.dp),
-                                    strokeWidth = 2.dp
-                                )
-                            } else {
+                            Box(Modifier.weight(1f).height(1.dp).background(SFColor.Border))
+                            Text(
+                                "OR",
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                color = SFColor.TextMuted,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                letterSpacing = 1.sp
+                            )
+                            Box(Modifier.weight(1f).height(1.dp).background(SFColor.Border))
+                        }
+
+                        // Google Login Button
+                        Button(
+                            onClick = {
+                                scope.launch {
+                                    isLoading = true
+                                    errorMsg = ""
+                                    successMsg = ""
+                                    focusManager.clearFocus()
+
+                                    val result = SupabaseManager.signInWithGoogle()
+                                    result.fold(
+                                        onSuccess = { onLoginSuccess() },
+                                        onFailure = { e ->
+                                            e.printStackTrace()
+                                            errorMsg = "Google Sign-In failed: ${e.message}"
+                                        }
+                                    )
+                                    isLoading = false
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth().height(54.dp),
+                            enabled = !isLoading,
+                            shape = RoundedCornerShape(14.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = SFColor.Surface2,
+                                disabledBackgroundColor = SFColor.Surface2.copy(alpha = 0.5f)
+                            ),
+                            elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
                                 Text(
-                                    if (isSignUp) "Create Account" else "Sign In",
+                                    "G",
                                     color = Color.White,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 15.sp
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Black
+                                )
+                                Spacer(Modifier.width(12.dp))
+                                Text(
+                                    "Continue with Google",
+                                    color = SFColor.TextPrimary,
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Medium
                                 )
                             }
                         }
                     }
 
-                    // Divider
+                    Spacer(Modifier.height(28.dp))
+
+                    // Footer stats
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(24.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Box(modifier = Modifier.weight(1f).height(1.dp).background(Border))
-                        Text(
-                            "OR",
-                            modifier = Modifier.padding(horizontal = 16.dp),
-                            color = Text2,
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Box(modifier = Modifier.weight(1f).height(1.dp).background(Border))
+                        FooterStatChip("$1M", "Starting Balance")
+                        DotSeparator()
+                        FooterStatChip("Real-Time", "Market Data")
+                        DotSeparator()
+                        FooterStatChip("Cloud", "Sync")
                     }
-
-                    // Google Login Button
-                    Button(
-                        onClick = {
-                            scope.launch {
-                                isLoading = true
-                                errorMsg = ""
-                                successMsg = ""
-                                focusManager.clearFocus()
-
-                                val result = SupabaseManager.signInWithGoogle()
-                                result.fold(
-                                    onSuccess = { onLoginSuccess() },
-                                    onFailure = { e ->
-                                        e.printStackTrace()
-                                        errorMsg = "Google Sign-In failed: ${e.message}"
-                                    }
-                                )
-                                isLoading = false
-                            }
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(52.dp),
-                        enabled = !isLoading,
-                        shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Surf2,
-                            disabledBackgroundColor = Surf2.copy(alpha = 0.5f)
-                        ),
-                        elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp)
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-                            Text("G", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Black)
-                            Spacer(Modifier.width(12.dp))
-                            Text(
-                                "Continue with Google",
-                                color = Text1,
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.Medium
-                            )
-                        }
-                    }
-                }
-
-                Spacer(Modifier.height(20.dp))
-
-                // Footer stats
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(24.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    StatChip("$1M", "Starting Balance")
-                    Box(Modifier.size(4.dp).clip(CircleShape).background(Border))
-                    StatChip("Real-Time", "Market Data")
-                    Box(Modifier.size(4.dp).clip(CircleShape).background(Border))
-                    StatChip("Cloud", "Sync")
                 }
             }
         }
@@ -474,7 +527,7 @@ private fun LoginField(
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(label, color = Text2, fontSize = 13.sp) },
+        label = { Text(label, color = SFColor.TextMuted, fontSize = 13.sp) },
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         modifier = Modifier.fillMaxWidth(),
@@ -484,21 +537,21 @@ private fun LoginField(
         keyboardActions = keyboardActions,
         shape = RoundedCornerShape(14.dp),
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = Text1,
-            cursorColor = Accent,
-            focusedBorderColor = Accent.copy(alpha = 0.8f),
-            unfocusedBorderColor = Border,
-            backgroundColor = Surf2.copy(alpha = 0.5f),
-            focusedLabelColor = Accent,
-            unfocusedLabelColor = Text2
+            textColor = SFColor.TextPrimary,
+            cursorColor = SFColor.Accent,
+            focusedBorderColor = SFColor.Accent.copy(alpha = 0.7f),
+            unfocusedBorderColor = SFColor.Border,
+            backgroundColor = SFColor.Surface2.copy(alpha = 0.5f),
+            focusedLabelColor = SFColor.Accent,
+            unfocusedLabelColor = SFColor.TextMuted
         )
     )
 }
 
 @Composable
-private fun StatChip(value: String, label: String) {
+private fun FooterStatChip(value: String, label: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(value, color = Accent, fontSize = 14.sp, fontWeight = FontWeight.Bold)
-        Text(label, color = Text2, fontSize = 11.sp)
+        Text(value, color = SFColor.Accent, fontSize = 14.sp, fontWeight = FontWeight.Bold)
+        Text(label, color = SFColor.TextMuted, fontSize = 11.sp)
     }
 }
