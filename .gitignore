@@ -1,0 +1,34 @@
+# Built artifacts
+build/
+bin/
+out/
+.gradle/
+.kotlin/
+
+# IDE files
+.idea/
+*.iml
+*.iws
+*.ipr
+atlassian-ide-plugin.xml
+com_crashlytics_export_strings.xml
+
+# Local configuration
+local.properties
+
+# Android specific
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Log files
+*.log
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# Secrets
+*.keystore
+!debug.keystore
+google-services.json

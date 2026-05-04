@@ -1,0 +1,11 @@
+superBase url
+https://lrwnpjulgtkcvkrknmsg.supabase.co
+
+publishable key
+sb_publishable_LEQvPGnrusAM--OYJntoxA_CR4wESMJ
+
+secret key
+sb_secret_HIa9XYXQFwcCzq5wDDkU3g_5AKNzYZZ
+
+finnhub api
+d7od0n9r01qsb7befgngd7od0n9r01qsb7befgo0
