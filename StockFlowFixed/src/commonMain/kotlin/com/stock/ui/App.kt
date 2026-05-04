@@ -91,6 +91,7 @@ import com.stock.util.formatMoney
 import com.stock.util.formatSignedMoney
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import com.stock.util.formatTime
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 // ── Colours ────────────────────────────────────────────────────────────────
@@ -122,11 +123,7 @@ private enum class Section(val icon: ImageVector) {
 }
 
 private fun formatTime(epochMillis: Long): String {
-    val totalSeconds = epochMillis / 1000
-    val hours   = (totalSeconds / 3600) % 24
-    val minutes = (totalSeconds / 60) % 60
-    val seconds = totalSeconds % 60
-    return "%02d:%02d:%02d".format(hours, minutes, seconds)
+    return com.stock.util.formatTime(epochMillis)
 }
 
 // ── Preview-safe fake data ──────────────────────────────────────────────────
@@ -182,27 +179,49 @@ fun StockFlowApp() {
     LaunchedEffect(authState) {
         if (!isPreview && authState == AuthState.LOGGED_IN) {
             isLoading = true
-            user = DataStore.load(1_000_000.0)
-            uiStateFlow.value = UiState.from(user!!, market!!)
+            try {
+                // Verify auth is still valid before loading data
+                if (!SupabaseManager.isLoggedIn()) {
+                    authState = AuthState.LOGGED_OUT
+                    isLoading = false
+                    return@LaunchedEffect
+                }
+
+                user = DataStore.load(1_000_000.0)
+                uiStateFlow.value = UiState.from(user!!, market!!)
+
+                // Load cloud data
+                try {
+                    val cloudUser = SupabaseManager.loadUser(1_000_000.0)
+                    user = cloudUser
+                    DataStore.save(cloudUser)
+                    uiStateFlow.value = UiState.from(cloudUser, market)
+                } catch (e: Exception) {
+                    println("Cloud sync error: ${e.message}")
+                    // Continue with local data
+                }
+
+                // Start market simulation
+                market.setOnUpdateCallback {
+                    val u = user ?: return@setOnUpdateCallback
+                    uiStateFlow.value = UiState.from(u, market)
+                }
+                market.startSimulation()
+            } catch (e: Exception) {
+                println("Error loading data: ${e.message}")
+                // If data loading fails completely, stay on the screen with defaults
+                if (user == null) {
+                    user = User(1_000_000.0)
+                    uiStateFlow.value = UiState.from(user!!, market!!)
+                }
+            }
             isLoading = false
         }
     }
 
-    if (!isPreview) {
+    // Clean up market simulation when the composable is disposed
+    if (!isPreview && market != null) {
         DisposableEffect(Unit) {
-            scope.launch {
-                val cloudUser = SupabaseManager.loadUser(1_000_000.0)
-                if (cloudUser != null) {
-                    user = cloudUser
-                    DataStore.save(cloudUser)
-                    uiStateFlow.value = UiState.from(cloudUser, market!!)
-                }
-            }
-            market!!.setOnUpdateCallback {
-                val u = user ?: return@setOnUpdateCallback
-                uiStateFlow.value = UiState.from(u, market)
-            }
-            market.startSimulation()
             onDispose { market.stopSimulation() }
         }
     }

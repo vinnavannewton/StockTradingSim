@@ -70,12 +70,35 @@ object SupabaseManager {
 
     /**
      * Called once at startup. Waits for the Auth plugin to finish loading the
-     * persisted session. Returns true when the user is already logged in.
+     * persisted session, then validates it is still usable.
+     * Returns true only when the user is genuinely logged in with a valid token.
      */
-    suspend fun restoreSession(): Boolean = runCatching {
-        client.auth.awaitInitialization()
-        client.auth.currentUserOrNull() != null
-    }.getOrDefault(false)
+    suspend fun restoreSession(): Boolean {
+        return try {
+            client.auth.awaitInitialization()
+            val user = client.auth.currentUserOrNull()
+            if (user != null) {
+                // Force a session refresh to verify the token is still valid.
+                // If the refresh_token is expired/revoked this will throw.
+                try {
+                    client.auth.refreshCurrentSession()
+                    client.auth.currentUserOrNull() != null
+                } catch (e: Exception) {
+                    // Token refresh failed — session is stale
+                    println("Session refresh failed, clearing stale session: ${e.message}")
+                    SessionStorage.clear()
+                    false
+                }
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            println("restoreSession error: ${e.message}")
+            // If anything goes wrong loading the session, clear it and start fresh
+            SessionStorage.clear()
+            false
+        }
+    }
 
     suspend fun signUp(email: String, password: String): Result<Unit> = runCatching {
         client.auth.signUpWith(Email) { this.email = email; this.password = password }
@@ -86,7 +109,10 @@ object SupabaseManager {
     }
 
     suspend fun signInWithGoogle(): Result<Unit> = runCatching {
-        client.auth.signInWith(Google, redirectUrl = "stockflow://login-callback")
+        // On desktop JVM, supabase-kt starts an HTTP callback server on localhost.
+        // Using a custom URI scheme (stockflow://) won't work on desktop.
+        // Let the library pick the correct redirect automatically.
+        client.auth.signInWith(Google)
     }
 
     suspend fun signOut() = runCatching {
