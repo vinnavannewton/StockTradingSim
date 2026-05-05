@@ -110,8 +110,6 @@ object SupabaseManager {
         client.auth.signInWith(Email) { this.email = email; this.password = password }
     }
 
-    // NEW (Correct for 3.0.0)
-    // In /home/vinnavan/users/android/StockFlowFixed/src/commonMain/kotlin/com/stock/api/SupabaseManager.kt
 
     suspend fun signInWithGoogle(): Result<Unit> = runCatching {
         // Pass redirectUrl as a parameter to the function

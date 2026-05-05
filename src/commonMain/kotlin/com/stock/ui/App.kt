@@ -49,7 +49,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 private enum class AuthState { SPLASH, CHECKING, LOGGED_OUT, LOGGED_IN, WAITING_FOR_AUTH }
 
 // ── Root composable ─────────────────────────────────────────────────────────
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun StockFlowApp() {
     val isPreview = LocalInspectionMode.current
@@ -593,7 +592,7 @@ private fun MobileLayout(
             elevation = 8.dp,
             modifier = Modifier.height(64.dp)
         ) {
-            Section.values().forEach { section ->
+            Section.entries.forEach { section ->
                 val selected = currentSection == section
                 BottomNavigationItem(
                     selected = selected,
@@ -662,7 +661,7 @@ private fun TopTabs(current: Section, onSelect: (Section) -> Unit) {
         divider = {},
         indicator = {}
     ) {
-        Section.values().forEach { section ->
+        Section.entries.forEach { section ->
             val selected = current == section
             Tab(
                 selected = selected,

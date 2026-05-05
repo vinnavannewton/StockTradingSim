@@ -129,8 +129,16 @@ fun StockDetailScreen(
                         null, tint = lineColor, modifier = Modifier.size(14.dp)
                     )
                     Spacer(Modifier.width(4.dp))
+                    val pctStr = buildString {
+                        if (pctChange < 0) append('-')
+                        val abs = kotlin.math.abs(pctChange)
+                        val scaled = (abs * 100.0).toLong()
+                        append(scaled / 100)
+                        append('.')
+                        append((scaled % 100).toString().padStart(2, '0'))
+                    }
                     Text(
-                        "${String.format("%.2f", pctChange)}%",
+                        "$pctStr%",
                         color = lineColor, fontSize = 14.sp, fontWeight = FontWeight.Bold
                     )
                 }
@@ -165,7 +173,7 @@ fun StockDetailScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            TimeRange.values().forEach { range ->
+            TimeRange.entries.forEach { range ->
                 val selected = range == selectedRange
                 Box(
                     modifier = Modifier

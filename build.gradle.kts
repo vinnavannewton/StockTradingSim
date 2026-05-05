@@ -35,6 +35,10 @@ kotlin {
                 implementation("io.github.jan-tennert.supabase:auth-kt:3.0.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
                 implementation("org.jetbrains.compose.material:material-icons-extended:1.7.3")
+                // Ktor HTTP client (core + JSON support for FinnhubClient)
+                implementation("io.ktor:ktor-client-core:3.0.3")
+                implementation("io.ktor:ktor-client-content-negotiation:3.0.3")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.3")
             }
         }
         val desktopMain by getting {
@@ -85,10 +89,28 @@ android {
 compose.desktop {
     application {
         mainClass = "com.stock.desktop.MainKt"
+
         nativeDistributions {
             targetFormats(TargetFormat.Deb, TargetFormat.Rpm, TargetFormat.Msi, TargetFormat.Exe)
             packageName = "StockFlow"
             packageVersion = "1.0.0"
+
+            // Include the java.net.http module so ktor-client-java works in the bundled JDK
+            modules(
+                "java.net.http",
+                "jdk.crypto.ec",       // TLS/HTTPS support
+                "jdk.crypto.cryptoki", // PKCS11 crypto
+                "java.naming",         // JNDI (needed by some JVM internals)
+                "jdk.security.auth"
+            )
+
+            windows {
+                // Register the stockflow:// URI scheme so Windows routes OAuth callbacks to this app
+                // jpackage will embed this in the installer
+                upgradeUuid = "4A2B3C4D-5E6F-7A8B-9C0D-1E2F3A4B5C6D"
+                menuGroup = "StockFlow"
+                perUserInstall = true
+            }
         }
     }
 }
