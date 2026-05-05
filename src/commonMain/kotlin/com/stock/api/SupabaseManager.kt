@@ -43,8 +43,10 @@ object SupabaseManager {
 
     val client = createSupabaseClient(SUPABASE_URL, SUPABASE_KEY) {
         install(Auth) {
-            scheme = "stockflow"
-            host = "login-callback"
+            if (com.stock.auth.isAndroid) {
+                scheme = "stockflow"
+                host = "login-callback"
+            }
             // ── Persistent session: survives app restarts ──────────────────
             sessionManager = object : SessionManager {
                 override suspend fun loadSession(): UserSession? {
@@ -115,7 +117,7 @@ object SupabaseManager {
         // Pass redirectUrl as a parameter to the function
         client.auth.signInWith(
             provider = Google,
-            redirectUrl = "stockflow://login-callback"
+            redirectUrl = if (com.stock.auth.isAndroid) "stockflow://login-callback" else null
         )
     }
 

@@ -44,7 +44,9 @@ kotlin {
         val desktopMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
-                implementation("io.ktor:ktor-client-java:3.0.3")
+                implementation("io.ktor:ktor-client-okhttp:3.0.3")
+                implementation("io.ktor:ktor-server-core:3.0.3")
+                implementation("io.ktor:ktor-server-netty:3.0.3") // Switching to Netty as well for stability
             }
         }
         val androidMain by getting {
